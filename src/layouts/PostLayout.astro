@@ -21,42 +21,13 @@ const formatDate = (date: Date) => {
   });
 };
 
-// Category-based color theming (ThomasMoes 2.1)
-const categoryThemes: Record<string, { bg: string; text: string; accent: string; muted: string }> = {
-  'essays': {
-    bg: '#fef4ec',
-    text: '#2d2011',
-    accent: '#8b4513',
-    muted: '#6b5d52'
-  },
-  'making': {
-    bg: '#1d2c27',
-    text: '#d9b988',
-    accent: '#e8c896',
-    muted: '#a89878'
-  },
-  '具身认知': {
-    bg: '#3749e5',
-    text: '#ffffff',
-    accent: '#ffd166',
-    muted: 'rgba(255, 255, 255, 0.7)'
-  },
-  'reading': {
-    bg: '#0d0c16',
-    text: '#ebe5de',
-    accent: '#f5c517',
-    muted: 'rgba(235, 229, 222, 0.6)'
-  },
-  'default': {
-    bg: '#faf8f5',
-    text: '#2d2011',
-    accent: '#8b4513',
-    muted: '#6b6b6b'
-  }
+// Default theme for all posts
+const theme = {
+  bg: '#faf8f5',
+  text: '#2d2011',
+  accent: '#8b4513',
+  muted: '#6b6b6b'
 };
-
-const category = frontmatter.category || 'default';
-const theme = categoryThemes[category] || categoryThemes['default'];
 ---
 
 <!doctype html>
@@ -157,8 +128,9 @@ const theme = categoryThemes[category] || categoryThemes['default'];
         display: flex;
         align-items: center;
         font-family: var(--font-display);
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         font-weight: 500;
+        letter-spacing: 0.02em;
         border-bottom: none;
         transition: transform 0.2s ease;
       }
@@ -172,15 +144,6 @@ const theme = categoryThemes[category] || categoryThemes['default'];
         flex: 1;
         text-align: center;
         margin: 0 40px;
-      }
-
-      .article-nav-subtitle {
-        font-family: var(--font-heading);
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        opacity: 0.6;
-        margin-bottom: 2px;
       }
 
       .article-nav-title-text {
@@ -252,17 +215,6 @@ const theme = categoryThemes[category] || categoryThemes['default'];
         gap: 16px;
         font-size: 0.9375rem;
         color: var(--theme-muted);
-      }
-
-      .article-category {
-        display: inline-block;
-        padding: 6px 16px;
-        border: 1px solid currentColor;
-        border-radius: var(--radius-pill);
-        font-family: var(--font-heading);
-        font-size: 0.8125rem;
-        font-weight: 500;
-        opacity: 0.8;
       }
 
       /* Article Divider */
@@ -435,6 +387,10 @@ const theme = categoryThemes[category] || categoryThemes['default'];
           padding: 0 24px;
         }
 
+        .article-nav-logo {
+          font-size: 1.25rem;
+        }
+
         .article-nav-title {
           display: none;
         }
@@ -475,7 +431,6 @@ const theme = categoryThemes[category] || categoryThemes['default'];
       <div class="article-nav-container">
         <a href="/" class="article-nav-logo">Yuming</a>
         <div class="article-nav-title">
-          <div class="article-nav-subtitle">{frontmatter.category}</div>
           <div class="article-nav-title-text">{frontmatter.title}</div>
         </div>
         <div class="article-nav-actions">
@@ -492,7 +447,6 @@ const theme = categoryThemes[category] || categoryThemes['default'];
             <time datetime={frontmatter.date.toISOString()}>
               {formatDate(frontmatter.date)}
             </time>
-            <span class="article-category">{frontmatter.category}</span>
           </div>
         </header>
 

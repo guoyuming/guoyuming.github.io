@@ -76,9 +76,7 @@ const postsData = sortedPosts.map(post => ({
   </div>
 
   <!-- Pass posts data to client -->
-  <script type="application/json" id="posts-data">
-    {JSON.stringify(postsData)}
-  </script>
+  <script type="application/json" id="posts-data" set:html={JSON.stringify(postsData)} />
 </BaseLayout>
 
 <style>

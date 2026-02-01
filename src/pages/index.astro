@@ -33,7 +33,6 @@ const getExcerpt = (body: string, maxLength = 100) => {
   <ul class="post-grid">
     {sortedPosts.map((post, index) => (
       <li class="post-card">
-        <span class="post-card-number">{String(sortedPosts.length - index).padStart(2, '0')}</span>
         <div class="post-card-content">
           <h2 class="post-card-title">
             <a href={`/posts/${post.slug}`}>{post.data.title}</a>

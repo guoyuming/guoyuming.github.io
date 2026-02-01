@@ -20,18 +20,18 @@ const { title, description = "郭雨明的博客" } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
     <style is:global>
       :root {
-        /* ThomasMoes Color System */
+        /* ThomasMoes Bold Color System - Dark Theme */
         --brown: #2d2011;
         --dark-bg: #0d0c16;
         --lightgrey: #ebe5de;
         --cream: #fef4ec;
-        --color-bg: #faf8f5;
-        --color-bg-alt: #f0ebe3;
-        --color-text: var(--brown);
-        --color-text-muted: #6b6b6b;
-        --color-accent: #2d2011;
-        --color-accent-hover: #4a3520;
-        --color-border: #d7cabc;
+        --color-bg: #0d0c16;
+        --color-bg-alt: #1a1825;
+        --color-text: #ebe5de;
+        --color-text-muted: #9a9a9a;
+        --color-accent: #e4432e;
+        --color-accent-hover: #f5c517;
+        --color-border: rgba(235, 229, 222, 0.15);
         
         /* Typography */
         --font-display: 'Playfair Display', Georgia, serif;
@@ -87,6 +87,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
 
       a:hover {
         border-bottom-color: transparent;
+        color: var(--color-accent);
       }
 
       /* Typography */
@@ -125,7 +126,8 @@ const { title, description = "郭雨明的博客" } = Astro.props;
         border-left: 3px solid var(--color-accent);
         padding-left: 1.5rem;
         margin: 2rem 0;
-        color: var(--color-text-muted);
+        color: var(--color-text);
+        opacity: 0.85;
         font-family: var(--font-display);
         font-style: italic;
         font-size: 1.25rem;
@@ -167,7 +169,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       hr {
         border: none;
         height: 1px;
-        background: rgba(45, 32, 17, 0.2);
+        background: rgba(235, 229, 222, 0.2);
         margin: 3rem 0;
       }
 
@@ -218,18 +220,6 @@ const { title, description = "郭雨明的博客" } = Astro.props;
         letter-spacing: 0.02em;
       }
 
-      .site-tagline {
-        font-size: 0.875rem;
-        color: var(--color-text-muted);
-        font-style: italic;
-        display: none;
-      }
-
-      @media (min-width: 768px) {
-        .site-tagline {
-          display: block;
-        }
-      }
 
       /* Navigation with dot separators */
       .site-nav {
@@ -249,17 +239,18 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       }
 
       .site-nav a:hover {
-        background: rgba(45, 32, 17, 0.08);
+        background: rgba(235, 229, 222, 0.1);
         border-bottom: none;
+        color: var(--color-accent);
       }
 
       /* Dot separator */
       .nav-dot {
         width: 4px;
         height: 4px;
-        background: var(--color-text);
+        background: var(--color-accent);
         border-radius: 50%;
-        opacity: 0.3;
+        opacity: 0.6;
       }
 
       /* Main Content */
@@ -301,7 +292,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       }
 
       .post-card {
-        background: #fff;
+        background: #141218;
         border: 1px solid var(--color-border);
         border-radius: var(--radius-card);
         padding: 32px;
@@ -315,19 +306,10 @@ const { title, description = "郭雨明的博客" } = Astro.props;
 
       .post-card:hover {
         transform: scale(1.015);
-        box-shadow: 0 8px 30px rgba(45, 32, 17, 0.1);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        border-color: var(--color-accent);
       }
 
-      .post-card-number {
-        font-family: var(--font-display);
-        font-size: 4.5rem;
-        font-weight: 400;
-        line-height: 1;
-        opacity: 0.15;
-        position: absolute;
-        top: 20px;
-        right: 24px;
-      }
 
       .post-card-content {
         flex: 1;
@@ -379,13 +361,15 @@ const { title, description = "郭雨明的博客" } = Astro.props;
         font-family: var(--font-heading);
         font-size: 0.8125rem;
         font-weight: 500;
-        background: #fff;
+        background: var(--color-bg-alt);
         transition: all 0.2s ease;
       }
 
       .tag:hover {
-        background: var(--color-bg-alt);
+        background: var(--color-accent);
+        color: #fff;
         transform: scale(1.05);
+        border-color: var(--color-accent);
       }
 
       .post-category {
@@ -408,7 +392,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
 
       .post-item {
         padding: 1.5rem 0;
-        border-bottom: 1px solid rgba(45, 32, 17, 0.15);
+        border-bottom: 1px solid rgba(235, 229, 222, 0.15);
       }
 
       .post-item:last-child {
@@ -452,21 +436,22 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       }
 
       .button-primary {
-        background: var(--brown);
+        background: var(--color-accent);
         color: #fff;
       }
 
       .button-primary:hover {
         background: var(--color-accent-hover);
+        color: #0d0c16;
       }
 
       .button-secondary {
-        background: rgba(45, 32, 17, 0.08);
-        color: var(--brown);
+        background: rgba(235, 229, 222, 0.1);
+        color: var(--color-text);
       }
 
       .button-secondary:hover {
-        background: rgba(45, 32, 17, 0.15);
+        background: rgba(235, 229, 222, 0.2);
       }
 
       /* Article Styles */
@@ -489,7 +474,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       article .post-meta {
         margin-bottom: 1.5rem;
         padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(45, 32, 17, 0.15);
+        border-bottom: 1px solid rgba(235, 229, 222, 0.15);
       }
 
       .post-nav {
@@ -497,7 +482,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
         justify-content: space-between;
         margin-top: 4rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(45, 32, 17, 0.15);
+        border-top: 1px solid rgba(235, 229, 222, 0.15);
         font-size: 0.9rem;
         gap: 2rem;
       }
@@ -530,7 +515,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       .category-item a {
         display: block;
         padding: 16px 24px;
-        background: #fff;
+        background: #141218;
         border: 1px solid var(--color-border);
         border-radius: var(--radius-card);
         transition: all 0.2s ease;
@@ -539,8 +524,9 @@ const { title, description = "郭雨明的博客" } = Astro.props;
 
       .category-item a:hover {
         transform: scale(1.03);
-        box-shadow: 0 4px 15px rgba(45, 32, 17, 0.08);
-        border-bottom: 1px solid var(--color-border);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border-color: var(--color-accent);
+        border-bottom: 1px solid var(--color-accent);
       }
 
       .category-count {
@@ -551,7 +537,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
       /* Line Dividers */
       .divider {
         height: 1px;
-        background: rgba(45, 32, 17, 0.2);
+        background: rgba(235, 229, 222, 0.2);
         margin: 2rem 0;
       }
 
@@ -607,9 +593,6 @@ const { title, description = "郭雨明的博客" } = Astro.props;
           padding: 24px;
         }
 
-        .post-card-number {
-          font-size: 3rem;
-        }
 
         h1, .page-title {
           font-size: 2rem;
@@ -642,7 +625,6 @@ const { title, description = "郭雨明的博客" } = Astro.props;
         <a href="/" class="site-logo">
           <span class="site-logo-text">Yuming</span>
         </a>
-        <span class="site-tagline">It's better to burn out than to fade away.</span>
         <nav class="site-nav">
           <a href="/">首页</a>
           <span class="nav-dot"></span>
@@ -658,7 +640,7 @@ const { title, description = "郭雨明的博客" } = Astro.props;
     </main>
 
     <footer class="site-footer">
-      <p>&copy; 2017-{new Date().getFullYear()} 郭雨明</p>
+      <p>&copy; 2017-{new Date().getFullYear()}</p>
     </footer>
   </body>
 </html>

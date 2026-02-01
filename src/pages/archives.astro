@@ -383,15 +383,10 @@ const getExcerpt = (body: string, maxLength = 200) => {
       currentItem = activeItem;
     }
     
-    // Attach event listeners to each item
+    // Attach click event listeners to each item
     articleItems.forEach(function(item) {
       item.addEventListener('click', function(e) {
         e.preventDefault();
-        setActiveItem(item);
-        updatePreview(item);
-      });
-      
-      item.addEventListener('mouseenter', function() {
         setActiveItem(item);
         updatePreview(item);
       });

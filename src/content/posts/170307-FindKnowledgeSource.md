@@ -61,11 +61,7 @@ Formation部分指向一篇论文，形成习惯平均需要66天。这个过程
 
 知识之网中，学者、论文、期刊、主题都可以成为节点，你当时直觉认定哪条线索，就顺着它走向源头。比如，你找到学者Lally这条线索，因为习惯形成平均天数wikipedia引用的是该作者论文。把作者名字丢到[谷歌学术](https://scholar.google.com/scholar?hl=en&q=Lally%2C+P.&btnG=&as_sdt=1%2C5&as_sdtp=)中，有时候换几个呈现方式，多搜几次。Wikipedia中提到的论文出现在文献结果第一条，但在[学术作者](https://scholar.google.com/citations?mauthors=Phillippa+Lally&hl=en&view_op=search_authors)搜索中没有找到。
 
-![Lally P - search result.png](http://upload-images.jianshu.io/upload_images/201022-6b5af9da6a6ba726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
 在文献结果中，你可以找还有哪些论文和Habit有关，合作者是谁：找到[Benjamin Gardner](https://scholar.google.com/citations?user=e19NM40AAAAJ&hl=en)，他的信息列入了学术作者中，比如h-index: 26，研究领域有：habit, behaviour change… 你得到这两个领域的关键词。
-
-![Benjamin Gardner-h-index.png](http://upload-images.jianshu.io/upload_images/201022-2c132ac7dfc664dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 肆意汪洋
 
@@ -84,8 +80,6 @@ Formation部分指向一篇论文，形成习惯平均需要66天。这个过程
 2. 初步用网站分析检索结果，排除交通科学、环境政策等远距学科，留下行为心理、心理、神经和人类学等方向，剩下若干个结果。
 
 3. 生成引文报告：其中有被引数、施引文献、平均被引数和h指数等指标，此为原始引文报告。
-
-![extract raw data from WOS.png](http://upload-images.jianshu.io/upload_images/201022-f97579bc53e0f08e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此时请注意，导出引文报告包括：作者、标题、来源、摘要的信息，导出格式为纯文本。
 

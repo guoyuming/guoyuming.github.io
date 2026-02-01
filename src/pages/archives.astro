@@ -29,12 +29,12 @@ const postsData = sortedPosts.map(post => ({
 }));
 ---
 
-<BaseLayout title="归档">
+<BaseLayout title="博客">
   <div class="archive-split-container">
     <!-- Left Panel: Article List -->
     <aside class="article-list-panel">
       <div class="panel-header">
-        <h1 class="page-title">归档</h1>
+        <h1 class="page-title">博客</h1>
         <p class="article-count">{posts.length} 篇文章</p>
       </div>
       
@@ -56,12 +56,12 @@ const postsData = sortedPosts.map(post => ({
 
     <!-- Right Panel: Preview Card -->
     <section class="preview-panel">
-      <article class="preview-card" id="preview-card">
-        <div class="preview-card-inner">
-          <div class="preview-avatar">
-            <img src="/avatar.gif" alt="Avatar" width="56" height="56" />
-          </div>
-          
+      <a 
+        href={`/posts/${sortedPosts[0]?.slug}`} 
+        class="preview-card" 
+        id="preview-card"
+      >
+        <article class="preview-card-inner">
           <div class="preview-content">
             <h2 class="preview-title" id="preview-title">
               {sortedPosts[0]?.data.title}
@@ -70,16 +70,8 @@ const postsData = sortedPosts.map(post => ({
               {getExcerpt(sortedPosts[0]?.body || '')}
             </p>
           </div>
-          
-          <a 
-            href={`/posts/${sortedPosts[0]?.slug}`} 
-            class="preview-link"
-            id="preview-link"
-          >
-            阅读全文 →
-          </a>
-        </div>
-      </article>
+        </article>
+      </a>
     </section>
   </div>
 
@@ -228,6 +220,7 @@ const postsData = sortedPosts.map(post => ({
   }
 
   .preview-card {
+    display: block;
     position: sticky;
     top: calc(var(--nav-height) + 60px);
     width: 100%;
@@ -237,6 +230,15 @@ const postsData = sortedPosts.map(post => ({
     border-radius: var(--radius-card);
     overflow: hidden;
     animation: cardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .preview-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
 
   @keyframes cardEnter {
@@ -252,23 +254,6 @@ const postsData = sortedPosts.map(post => ({
 
   .preview-card-inner {
     padding: 2rem;
-  }
-
-  .preview-avatar {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 1.5rem;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--color-bg);
-    border: 2px solid var(--color-border);
-  }
-
-  .preview-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0;
   }
 
   .preview-content {
@@ -305,28 +290,6 @@ const postsData = sortedPosts.map(post => ({
   .preview-excerpt.is-transitioning {
     opacity: 0;
     transform: translateY(-8px);
-  }
-
-  .preview-link {
-    display: inline-flex;
-    align-items: center;
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.25rem;
-    background: var(--color-accent);
-    color: #fff;
-    font-family: var(--font-heading);
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: none;
-    border-radius: var(--radius-pill);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .preview-link:hover {
-    background: var(--color-accent-hover);
-    color: var(--color-bg);
-    transform: translateX(4px);
-    border-bottom: none;
   }
 
   /* Responsive Styles */
@@ -393,37 +356,42 @@ const postsData = sortedPosts.map(post => ({
     const articleItems = document.querySelectorAll('.article-item');
     const previewTitle = document.getElementById('preview-title');
     const previewExcerpt = document.getElementById('preview-excerpt');
-    const previewLink = document.getElementById('preview-link') as HTMLAnchorElement;
+    const previewCard = document.getElementById('preview-card') as HTMLAnchorElement;
     
-    if (!previewTitle || !previewExcerpt || !previewLink) return;
+    if (!previewTitle || !previewExcerpt || !previewCard) return;
     
     let currentIndex = 0;
-    let isTransitioning = false;
+    let transitionTimeout: ReturnType<typeof setTimeout> | null = null;
     let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
     
     // Update preview card with animation
-    const updatePreview = (index: number) => {
-      if (index === currentIndex || isTransitioning || index >= posts.length) return;
+    const updatePreview = (index: number, force = false) => {
+      if (index >= posts.length) return;
+      if (!force && index === currentIndex) return;
       
-      isTransitioning = true;
+      // Cancel any pending transition
+      if (transitionTimeout) {
+        clearTimeout(transitionTimeout);
+        transitionTimeout = null;
+      }
       
       // Add transitioning class for fade out
       previewTitle.classList.add('is-transitioning');
       previewExcerpt.classList.add('is-transitioning');
       
       // Update content after fade out
-      setTimeout(() => {
+      transitionTimeout = setTimeout(() => {
         const post = posts[index];
         previewTitle.textContent = post.title;
         previewExcerpt.textContent = post.excerpt;
-        previewLink.href = `/posts/${post.slug}`;
+        previewCard.href = `/posts/${post.slug}`;
         
         // Remove transitioning class for fade in
         previewTitle.classList.remove('is-transitioning');
         previewExcerpt.classList.remove('is-transitioning');
         
         currentIndex = index;
-        isTransitioning = false;
+        transitionTimeout = null;
       }, 150);
     };
     
@@ -445,11 +413,11 @@ const postsData = sortedPosts.map(post => ({
       }, 50);
     };
     
-    // Handle click
+    // Handle click - force update even if same index
     const handleClick = (index: number) => {
       if (hoverTimeout) clearTimeout(hoverTimeout);
       setActiveItem(index);
-      updatePreview(index);
+      updatePreview(index, true);
     };
     
     // Attach event listeners
@@ -474,7 +442,7 @@ const postsData = sortedPosts.map(post => ({
           newIndex = Math.max(currentIndex - 1, 0);
         } else if (keyEvent.key === 'Enter') {
           e.preventDefault();
-          previewLink.click();
+          previewCard.click();
           return;
         }
         

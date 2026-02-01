@@ -2,6 +2,14 @@
 import { getCollection } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 
+// Helper to convert slug to title
+function slugToTitle(slug: string): string {
+  return slug
+    .replace(/^\d{6}-/, '') // Remove date prefix like "170130-"
+    .replace(/-/g, ' ')     // Replace hyphens with spaces
+    .trim();
+}
+
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map(post => ({
@@ -12,8 +20,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+// Use frontmatter title if available, otherwise derive from filename
+const title = post.data.title || slugToTitle(post.slug);
 ---
 
-<PostLayout frontmatter={post.data} slug={post.slug}>
+<PostLayout frontmatter={{ ...post.data, title }} slug={post.slug}>
   <Content />
 </PostLayout>

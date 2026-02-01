@@ -3,11 +3,22 @@ import { getCollection } from 'astro:content';
 
 const { frontmatter, slug } = Astro.props;
 
+// Helper to convert slug to title
+function slugToTitle(slug: string): string {
+  return slug
+    .replace(/^\d{6}-/, '') // Remove date prefix like "170130-"
+    .replace(/-/g, ' ')     // Replace hyphens with spaces
+    .trim();
+}
+
 // Get all posts to find prev/next (sorted alphabetically by title)
 const allPosts = await getCollection('posts');
-const sortedPosts = allPosts.sort((a, b) => 
-  a.data.title.localeCompare(b.data.title, 'zh-CN')
-);
+const sortedPosts = allPosts
+  .map(post => ({
+    ...post,
+    displayTitle: post.data.title || slugToTitle(post.slug)
+  }))
+  .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle, 'zh-CN'));
 
 const currentIndex = sortedPosts.findIndex(post => post.slug === slug);
 const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
@@ -455,7 +466,7 @@ const theme = {
             <div class="post-nav-item prev">
               <a href={`/posts/${prevPost.slug}`}>
                 <div class="post-nav-label">← 上一篇</div>
-                <div class="post-nav-title">{prevPost.data.title}</div>
+                <div class="post-nav-title">{prevPost.displayTitle}</div>
               </a>
             </div>
           ) : <div class="post-nav-item"></div>}
@@ -463,7 +474,7 @@ const theme = {
             <div class="post-nav-item next">
               <a href={`/posts/${nextPost.slug}`}>
                 <div class="post-nav-label">下一篇 →</div>
-                <div class="post-nav-title">{nextPost.data.title}</div>
+                <div class="post-nav-title">{nextPost.displayTitle}</div>
               </a>
             </div>
           ) : <div class="post-nav-item"></div>}

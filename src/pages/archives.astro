@@ -2,10 +2,23 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
+// Helper to convert slug to title
+function slugToTitle(slug: string): string {
+  return slug
+    .replace(/^\d{6}-/, '') // Remove date prefix like "170130-"
+    .replace(/-/g, ' ')     // Replace hyphens with spaces
+    .trim();
+}
+
 const posts = await getCollection('posts');
-const sortedPosts = posts.sort((a, b) => 
-  a.data.title.localeCompare(b.data.title, 'zh-CN')
-);
+
+// Add derived titles and sort
+const sortedPosts = posts
+  .map(post => ({
+    ...post,
+    displayTitle: post.data.title || slugToTitle(post.slug)
+  }))
+  .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle, 'zh-CN'));
 
 // Extract preview text from markdown body
 const getExcerpt = (body: string, maxLength = 200) => {
@@ -21,12 +34,6 @@ const getExcerpt = (body: string, maxLength = 200) => {
   return plainText.substring(0, maxLength).trim() + '...';
 };
 
-// Prepare posts data for client-side
-const postsData = sortedPosts.map(post => ({
-  slug: post.slug,
-  title: post.data.title,
-  excerpt: getExcerpt(post.body),
-}));
 ---
 
 <BaseLayout title="博客">
@@ -44,11 +51,13 @@ const postsData = sortedPosts.map(post => ({
             class={`article-item ${index === 0 ? 'is-active' : ''}`}
             data-index={index}
             data-slug={post.slug}
+            data-title={post.displayTitle}
+            data-excerpt={getExcerpt(post.body)}
             role="option"
             aria-selected={index === 0 ? 'true' : 'false'}
           >
             <span class="article-item-indicator"></span>
-            <span class="article-item-title">{post.data.title}</span>
+            <span class="article-item-title">{post.displayTitle}</span>
           </button>
         ))}
       </nav>
@@ -64,7 +73,7 @@ const postsData = sortedPosts.map(post => ({
         <article class="preview-card-inner">
           <div class="preview-content">
             <h2 class="preview-title" id="preview-title">
-              {sortedPosts[0]?.data.title}
+              {sortedPosts[0]?.displayTitle}
             </h2>
             <p class="preview-excerpt" id="preview-excerpt">
               {getExcerpt(sortedPosts[0]?.body || '')}
@@ -75,8 +84,6 @@ const postsData = sortedPosts.map(post => ({
     </section>
   </div>
 
-  <!-- Pass posts data to client -->
-  <script type="application/json" id="posts-data" set:html={JSON.stringify(postsData)} />
 </BaseLayout>
 
 <style>
@@ -344,99 +351,62 @@ const postsData = sortedPosts.map(post => ({
 
 <script is:inline>
   (function() {
-    // Get posts data
-    var postsDataEl = document.getElementById('posts-data');
-    if (!postsDataEl) return;
-    
-    var posts = JSON.parse(postsDataEl.textContent || '[]');
-    
     // Get DOM elements
     var articleItems = document.querySelectorAll('.article-item');
     var previewTitle = document.getElementById('preview-title');
     var previewExcerpt = document.getElementById('preview-excerpt');
     var previewCard = document.getElementById('preview-card');
     
-    if (!previewTitle || !previewExcerpt || !previewCard) return;
+    if (!previewTitle || !previewExcerpt || !previewCard || articleItems.length === 0) return;
     
-    var currentIndex = 0;
-    var transitionTimeout = null;
-    var hoverTimeout = null;
+    var currentItem = articleItems[0];
     
-    // Update preview card with animation
-    function updatePreview(index, force) {
-      if (index >= posts.length) return;
-      if (!force && index === currentIndex) return;
+    // Update preview card with data from the clicked item
+    function updatePreview(item) {
+      var title = item.dataset.title;
+      var excerpt = item.dataset.excerpt;
+      var slug = item.dataset.slug;
       
-      // Cancel any pending transition
-      if (transitionTimeout) {
-        clearTimeout(transitionTimeout);
-        transitionTimeout = null;
-      }
-      
-      // Add transitioning class for fade out
-      previewTitle.classList.add('is-transitioning');
-      previewExcerpt.classList.add('is-transitioning');
-      
-      // Update content after fade out
-      transitionTimeout = setTimeout(function() {
-        var post = posts[index];
-        previewTitle.textContent = post.title;
-        previewExcerpt.textContent = post.excerpt;
-        previewCard.href = '/posts/' + post.slug;
-        
-        // Remove transitioning class for fade in
-        previewTitle.classList.remove('is-transitioning');
-        previewExcerpt.classList.remove('is-transitioning');
-        
-        currentIndex = index;
-        transitionTimeout = null;
-      }, 150);
+      previewTitle.textContent = title;
+      previewExcerpt.textContent = excerpt;
+      previewCard.href = '/posts/' + slug;
     }
     
     // Set active state on article item
-    function setActiveItem(index) {
-      articleItems.forEach(function(item, i) {
-        var isActive = i === index;
-        item.classList.toggle('is-active', isActive);
-        item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    function setActiveItem(activeItem) {
+      articleItems.forEach(function(item) {
+        item.classList.remove('is-active');
+        item.setAttribute('aria-selected', 'false');
       });
+      activeItem.classList.add('is-active');
+      activeItem.setAttribute('aria-selected', 'true');
+      currentItem = activeItem;
     }
     
-    // Handle hover with debounce
-    function handleHover(index) {
-      if (hoverTimeout) clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(function() {
-        setActiveItem(index);
-        updatePreview(index, false);
-      }, 50);
-    }
-    
-    // Handle click - force update even if same index
-    function handleClick(index) {
-      if (hoverTimeout) clearTimeout(hoverTimeout);
-      setActiveItem(index);
-      updatePreview(index, true);
-    }
-    
-    // Attach event listeners
-    articleItems.forEach(function(item, index) {
-      item.addEventListener('mouseenter', function() { handleHover(index); });
-      item.addEventListener('click', function(e) { 
+    // Attach event listeners to each item
+    articleItems.forEach(function(item) {
+      item.addEventListener('click', function(e) {
         e.preventDefault();
-        handleClick(index); 
+        setActiveItem(item);
+        updatePreview(item);
       });
-      item.addEventListener('focus', function() { handleHover(index); });
+      
+      item.addEventListener('mouseenter', function() {
+        setActiveItem(item);
+        updatePreview(item);
+      });
     });
     
     // Keyboard navigation
     var articleList = document.querySelector('.article-list');
     if (articleList) {
       articleList.addEventListener('keydown', function(e) {
+        var currentIndex = Array.prototype.indexOf.call(articleItems, currentItem);
         var newIndex = currentIndex;
         
         if (e.key === 'ArrowDown') {
           e.preventDefault();
-          newIndex = Math.min(currentIndex + 1, posts.length - 1);
+          newIndex = Math.min(currentIndex + 1, articleItems.length - 1);
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
           newIndex = Math.max(currentIndex - 1, 0);
@@ -447,15 +417,11 @@ const postsData = sortedPosts.map(post => ({
         }
         
         if (newIndex !== currentIndex) {
-          setActiveItem(newIndex);
-          updatePreview(newIndex, false);
-          articleItems[newIndex].focus();
-          
-          // Scroll into view if needed
-          articleItems[newIndex].scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest'
-          });
+          var newItem = articleItems[newIndex];
+          setActiveItem(newItem);
+          updatePreview(newItem);
+          newItem.focus();
+          newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       });
     }

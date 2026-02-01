@@ -1,5 +1,5 @@
 ---
-title: "210317-ARK Invest：SaaS 将迎来下一个黄金十年？"
+title: "ARK Invest：SaaS 将迎来下一个黄金十年？"
 ---
 
 写在前面：本文翻译自 ARK Invest 于2020年8月5日发布的文章，作者 James Wang，原文标题：《Software-as-a-Service - Could 2020-2030 be the Golden Age?》，关注公众号Growth Mind，回复：SAAS，可获得原文下载链接

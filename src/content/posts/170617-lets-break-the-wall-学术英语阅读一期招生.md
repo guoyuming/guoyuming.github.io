@@ -1,5 +1,5 @@
 ---
-title: "170617-Let’s Break the Wall | 学术英语阅读一期招生"
+title: "Let's Break the Wall | 学术英语阅读一期招生"
 ---
 
 ![](http://upload-images.jianshu.io/upload_images/201022-c01c0aaf52d6d71c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

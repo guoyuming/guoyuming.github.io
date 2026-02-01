@@ -1,0 +1,530 @@
+---
+import { getCollection } from 'astro:content';
+
+const { frontmatter, slug } = Astro.props;
+
+// Get all posts to find prev/next
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const currentIndex = sortedPosts.findIndex(post => post.slug === slug);
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+// Category-based color theming (ThomasMoes 2.1)
+const categoryThemes: Record<string, { bg: string; text: string; accent: string; muted: string }> = {
+  'essays': {
+    bg: '#fef4ec',
+    text: '#2d2011',
+    accent: '#8b4513',
+    muted: '#6b5d52'
+  },
+  'making': {
+    bg: '#1d2c27',
+    text: '#d9b988',
+    accent: '#e8c896',
+    muted: '#a89878'
+  },
+  '具身认知': {
+    bg: '#3749e5',
+    text: '#ffffff',
+    accent: '#ffd166',
+    muted: 'rgba(255, 255, 255, 0.7)'
+  },
+  'reading': {
+    bg: '#0d0c16',
+    text: '#ebe5de',
+    accent: '#f5c517',
+    muted: 'rgba(235, 229, 222, 0.6)'
+  },
+  'default': {
+    bg: '#faf8f5',
+    text: '#2d2011',
+    accent: '#8b4513',
+    muted: '#6b6b6b'
+  }
+};
+
+const category = frontmatter.category || 'default';
+const theme = categoryThemes[category] || categoryThemes['default'];
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={frontmatter.description || "郭雨明的博客"} />
+    <link rel="icon" type="image/gif" href="/avatar.gif" />
+    <title>{frontmatter.title} | Yuming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style define:vars={{
+      themeBg: theme.bg,
+      themeText: theme.text,
+      themeAccent: theme.accent,
+      themeMuted: theme.muted
+    }}>
+      :root {
+        --theme-bg: var(--themeBg);
+        --theme-text: var(--themeText);
+        --theme-accent: var(--themeAccent);
+        --theme-muted: var(--themeMuted);
+        
+        /* Typography */
+        --font-display: 'Playfair Display', Georgia, serif;
+        --font-heading: 'Instrument Sans', -apple-system, sans-serif;
+        --font-body: 'Noto Serif SC', Georgia, serif;
+        --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        
+        /* Layout */
+        --max-width: 1440px;
+        --content-width: 660px;
+        --nav-height: 80px;
+        --radius-nav: 30px;
+        --radius-pill: 100px;
+        --radius-sm: 8px;
+        --radius-card: 20px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--theme-bg);
+        color: var(--theme-text);
+        line-height: 1.8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      a {
+        color: var(--theme-accent);
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        transition: all 0.2s ease;
+      }
+
+      a:hover {
+        border-bottom-color: transparent;
+      }
+
+      /* Sticky Article Navigation (ThomasMoes 2.5) */
+      .article-nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: var(--theme-bg);
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+      }
+
+      .article-nav-container {
+        max-width: var(--max-width);
+        height: var(--nav-height);
+        margin: 0 auto;
+        padding: 0 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top-left-radius: var(--radius-nav);
+        border-top-right-radius: var(--radius-nav);
+      }
+
+      .article-nav-logo {
+        display: flex;
+        align-items: center;
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 500;
+        border-bottom: none;
+        transition: transform 0.2s ease;
+      }
+
+      .article-nav-logo:hover {
+        transform: scale(1.05);
+        border-bottom: none;
+      }
+
+      .article-nav-title {
+        flex: 1;
+        text-align: center;
+        margin: 0 40px;
+      }
+
+      .article-nav-subtitle {
+        font-family: var(--font-heading);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+        margin-bottom: 2px;
+      }
+
+      .article-nav-title-text {
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .article-nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        font-family: var(--font-heading);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        border-radius: var(--radius-pill);
+        border: none;
+        border-bottom: none;
+        background: rgba(128, 128, 128, 0.15);
+        transition: all 0.2s ease;
+      }
+
+      .nav-btn:hover {
+        background: rgba(128, 128, 128, 0.25);
+        transform: scale(1.05);
+        border-bottom: none;
+      }
+
+      /* Article Container */
+      .article-container {
+        flex: 1;
+        width: 100%;
+        max-width: var(--content-width);
+        margin: 0 auto;
+        padding: 60px 24px 80px;
+      }
+
+      /* Article Header */
+      .article-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .article-title {
+        font-family: var(--font-display);
+        font-size: 2.75rem;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 24px;
+      }
+
+      .article-meta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        font-size: 0.9375rem;
+        color: var(--theme-muted);
+      }
+
+      .article-category {
+        display: inline-block;
+        padding: 6px 16px;
+        border: 1px solid currentColor;
+        border-radius: var(--radius-pill);
+        font-family: var(--font-heading);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      /* Article Divider */
+      .article-divider {
+        height: 1px;
+        background: rgba(128, 128, 128, 0.3);
+        margin: 40px auto;
+        max-width: 100px;
+      }
+
+      /* Article Body (ThomasMoes 2.9) */
+      .article-body {
+        font-size: 1.25rem;
+        line-height: 1.9;
+      }
+
+      .article-body h1,
+      .article-body h2,
+      .article-body h3,
+      .article-body h4,
+      .article-body h5,
+      .article-body h6 {
+        font-family: var(--font-display);
+        font-weight: 400;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .article-body h2 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+      }
+
+      .article-body h3 {
+        font-family: var(--font-heading);
+        font-size: 1.375rem;
+        font-weight: 700;
+      }
+
+      .article-body p {
+        margin-bottom: 1.75em;
+      }
+
+      .article-body blockquote {
+        border-left: 3px solid var(--theme-accent);
+        padding-left: 1.5rem;
+        margin: 2.5rem 0;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 1.375rem;
+        line-height: 1.7;
+        opacity: 0.85;
+      }
+
+      .article-body ul,
+      .article-body ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1.75em;
+      }
+
+      .article-body li {
+        margin-bottom: 0.75em;
+      }
+
+      .article-body code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: rgba(128, 128, 128, 0.15);
+        padding: 0.2em 0.5em;
+        border-radius: var(--radius-sm);
+      }
+
+      .article-body pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1.5rem;
+        border-radius: var(--radius-card);
+        overflow-x: auto;
+        margin: 2.5rem 0;
+      }
+
+      .article-body pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+      }
+
+      .article-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-sm);
+        margin: 2rem 0;
+      }
+
+      .article-body hr {
+        border: none;
+        height: 1px;
+        background: rgba(128, 128, 128, 0.3);
+        margin: 3rem 0;
+      }
+
+      /* Post Navigation */
+      .post-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        gap: 24px;
+      }
+
+      .post-nav-item {
+        flex: 1;
+        max-width: 45%;
+      }
+
+      .post-nav-item a {
+        display: block;
+        padding: 20px;
+        background: rgba(128, 128, 128, 0.08);
+        border-radius: var(--radius-card);
+        border: none;
+        border-bottom: none;
+        transition: all 0.2s ease;
+      }
+
+      .post-nav-item a:hover {
+        background: rgba(128, 128, 128, 0.15);
+        transform: scale(1.02);
+        border-bottom: none;
+      }
+
+      .post-nav-label {
+        font-family: var(--font-heading);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+        margin-bottom: 8px;
+      }
+
+      .post-nav-title {
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .post-nav-item.next {
+        text-align: right;
+        margin-left: auto;
+      }
+
+      /* Footer */
+      .article-footer {
+        text-align: center;
+        padding: 40px 24px;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        color: var(--theme-muted);
+        font-size: 0.875rem;
+      }
+
+      .article-footer p {
+        margin: 0;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .article-nav-container {
+          padding: 0 24px;
+        }
+
+        .article-nav-title {
+          display: none;
+        }
+
+        .article-container {
+          padding: 40px 20px 60px;
+        }
+
+        .article-title {
+          font-size: 2rem;
+        }
+
+        .article-body {
+          font-size: 1.125rem;
+        }
+
+        .article-body blockquote {
+          font-size: 1.125rem;
+        }
+
+        .post-nav {
+          flex-direction: column;
+        }
+
+        .post-nav-item {
+          max-width: 100%;
+        }
+
+        .post-nav-item.next {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sticky Article Navigation -->
+    <nav class="article-nav">
+      <div class="article-nav-container">
+        <a href="/" class="article-nav-logo">Yuming</a>
+        <div class="article-nav-title">
+          <div class="article-nav-subtitle">{frontmatter.category}</div>
+          <div class="article-nav-title-text">{frontmatter.title}</div>
+        </div>
+        <div class="article-nav-actions">
+          <a href="/" class="nav-btn">返回首页</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="article-container">
+      <article>
+        <header class="article-header">
+          <h1 class="article-title">{frontmatter.title}</h1>
+          <div class="article-meta">
+            <time datetime={frontmatter.date.toISOString()}>
+              {formatDate(frontmatter.date)}
+            </time>
+            <span class="article-category">{frontmatter.category}</span>
+          </div>
+        </header>
+
+        <div class="article-divider"></div>
+        
+        <div class="article-body">
+          <slot />
+        </div>
+
+        <nav class="post-nav">
+          {prevPost ? (
+            <div class="post-nav-item prev">
+              <a href={`/posts/${prevPost.slug}`}>
+                <div class="post-nav-label">← 上一篇</div>
+                <div class="post-nav-title">{prevPost.data.title}</div>
+              </a>
+            </div>
+          ) : <div class="post-nav-item"></div>}
+          {nextPost ? (
+            <div class="post-nav-item next">
+              <a href={`/posts/${nextPost.slug}`}>
+                <div class="post-nav-label">下一篇 →</div>
+                <div class="post-nav-title">{nextPost.data.title}</div>
+              </a>
+            </div>
+          ) : <div class="post-nav-item"></div>}
+        </nav>
+      </article>
+    </main>
+
+    <footer class="article-footer">
+      <p>&copy; 2017-{new Date().getFullYear()} 郭雨明</p>
+    </footer>
+  </body>
+</html>

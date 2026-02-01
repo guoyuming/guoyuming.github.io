@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+// Get first ~80 characters of content for excerpt (simplified approach)
+const getExcerpt = (body: string, maxLength = 100) => {
+  // Remove markdown formatting and get plain text
+  const plainText = body
+    .replace(/^---[\s\S]*?---/, '') // Remove frontmatter
+    .replace(/[#*_`>\[\]]/g, '') // Remove markdown symbols
+    .replace(/\n+/g, ' ') // Replace newlines with spaces
+    .trim();
+  
+  if (plainText.length <= maxLength) return plainText;
+  return plainText.substring(0, maxLength).trim() + '...';
+};
+---
+
+<BaseLayout title="首页">
+  <ul class="post-grid">
+    {sortedPosts.map((post, index) => (
+      <li class="post-card">
+        <span class="post-card-number">{String(sortedPosts.length - index).padStart(2, '0')}</span>
+        <div class="post-card-content">
+          <h2 class="post-card-title">
+            <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+          </h2>
+          <p class="post-card-excerpt">{getExcerpt(post.body)}</p>
+          <div class="post-card-meta">
+            <time datetime={post.data.date.toISOString()}>
+              {formatDate(post.data.date)}
+            </time>
+            <span class="post-category">{post.data.category}</span>
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

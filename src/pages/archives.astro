@@ -344,28 +344,28 @@ const postsData = sortedPosts.map(post => ({
   }
 </style>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
+<script is:inline>
+  (function() {
     // Get posts data
-    const postsDataEl = document.getElementById('posts-data');
+    var postsDataEl = document.getElementById('posts-data');
     if (!postsDataEl) return;
     
-    const posts: Array<{ slug: string; title: string; excerpt: string }> = JSON.parse(postsDataEl.textContent || '[]');
+    var posts = JSON.parse(postsDataEl.textContent || '[]');
     
     // Get DOM elements
-    const articleItems = document.querySelectorAll('.article-item');
-    const previewTitle = document.getElementById('preview-title');
-    const previewExcerpt = document.getElementById('preview-excerpt');
-    const previewCard = document.getElementById('preview-card') as HTMLAnchorElement;
+    var articleItems = document.querySelectorAll('.article-item');
+    var previewTitle = document.getElementById('preview-title');
+    var previewExcerpt = document.getElementById('preview-excerpt');
+    var previewCard = document.getElementById('preview-card');
     
     if (!previewTitle || !previewExcerpt || !previewCard) return;
     
-    let currentIndex = 0;
-    let transitionTimeout: ReturnType<typeof setTimeout> | null = null;
-    let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
+    var currentIndex = 0;
+    var transitionTimeout = null;
+    var hoverTimeout = null;
     
     // Update preview card with animation
-    const updatePreview = (index: number, force = false) => {
+    function updatePreview(index, force) {
       if (index >= posts.length) return;
       if (!force && index === currentIndex) return;
       
@@ -380,11 +380,11 @@ const postsData = sortedPosts.map(post => ({
       previewExcerpt.classList.add('is-transitioning');
       
       // Update content after fade out
-      transitionTimeout = setTimeout(() => {
-        const post = posts[index];
+      transitionTimeout = setTimeout(function() {
+        var post = posts[index];
         previewTitle.textContent = post.title;
         previewExcerpt.textContent = post.excerpt;
-        previewCard.href = `/posts/${post.slug}`;
+        previewCard.href = '/posts/' + post.slug;
         
         // Remove transitioning class for fade in
         previewTitle.classList.remove('is-transitioning');
@@ -393,71 +393,73 @@ const postsData = sortedPosts.map(post => ({
         currentIndex = index;
         transitionTimeout = null;
       }, 150);
-    };
+    }
     
     // Set active state on article item
-    const setActiveItem = (index: number) => {
-      articleItems.forEach((item, i) => {
-        const isActive = i === index;
+    function setActiveItem(index) {
+      articleItems.forEach(function(item, i) {
+        var isActive = i === index;
         item.classList.toggle('is-active', isActive);
         item.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
-    };
+    }
     
     // Handle hover with debounce
-    const handleHover = (index: number) => {
+    function handleHover(index) {
       if (hoverTimeout) clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => {
+      hoverTimeout = setTimeout(function() {
         setActiveItem(index);
-        updatePreview(index);
+        updatePreview(index, false);
       }, 50);
-    };
+    }
     
     // Handle click - force update even if same index
-    const handleClick = (index: number) => {
+    function handleClick(index) {
       if (hoverTimeout) clearTimeout(hoverTimeout);
       setActiveItem(index);
       updatePreview(index, true);
-    };
+    }
     
     // Attach event listeners
-    articleItems.forEach((item, index) => {
-      item.addEventListener('mouseenter', () => handleHover(index));
-      item.addEventListener('click', () => handleClick(index));
-      item.addEventListener('focus', () => handleHover(index));
+    articleItems.forEach(function(item, index) {
+      item.addEventListener('mouseenter', function() { handleHover(index); });
+      item.addEventListener('click', function(e) { 
+        e.preventDefault();
+        handleClick(index); 
+      });
+      item.addEventListener('focus', function() { handleHover(index); });
     });
     
     // Keyboard navigation
-    const articleList = document.querySelector('.article-list');
+    var articleList = document.querySelector('.article-list');
     if (articleList) {
-      articleList.addEventListener('keydown', (e: Event) => {
-        const keyEvent = e as KeyboardEvent;
-        let newIndex = currentIndex;
+      articleList.addEventListener('keydown', function(e) {
+        var newIndex = currentIndex;
         
-        if (keyEvent.key === 'ArrowDown') {
+        if (e.key === 'ArrowDown') {
           e.preventDefault();
           newIndex = Math.min(currentIndex + 1, posts.length - 1);
-        } else if (keyEvent.key === 'ArrowUp') {
+        } else if (e.key === 'ArrowUp') {
           e.preventDefault();
           newIndex = Math.max(currentIndex - 1, 0);
-        } else if (keyEvent.key === 'Enter') {
+        } else if (e.key === 'Enter') {
           e.preventDefault();
-          previewCard.click();
+          window.location.href = previewCard.href;
           return;
         }
         
         if (newIndex !== currentIndex) {
           setActiveItem(newIndex);
-          updatePreview(newIndex);
-          (articleItems[newIndex] as HTMLElement).focus();
+          updatePreview(newIndex, false);
+          articleItems[newIndex].focus();
           
           // Scroll into view if needed
-          (articleItems[newIndex] as HTMLElement).scrollIntoView({
+          articleItems[newIndex].scrollIntoView({
             behavior: 'smooth',
             block: 'nearest'
           });
         }
       });
     }
-  });
+  })();
 </script>

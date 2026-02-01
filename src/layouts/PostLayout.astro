@@ -87,12 +87,12 @@ const theme = {
       a {
         color: var(--theme-accent);
         text-decoration: none;
-        border-bottom: 1px solid currentColor;
-        transition: all 0.2s ease;
+        transition: color 0.15s ease, opacity 0.15s ease;
       }
 
       a:hover {
-        border-bottom-color: transparent;
+        color: #c4371a;
+        opacity: 0.85;
       }
 
       /* Sticky Article Navigation (ThomasMoes 2.5) */
@@ -123,13 +123,13 @@ const theme = {
         font-size: 1.5rem;
         font-weight: 500;
         letter-spacing: 0.02em;
-        border-bottom: none;
-        transition: transform 0.2s ease;
+        color: var(--theme-text);
+        transition: transform 0.2s ease, color 0.15s ease;
       }
 
       .article-nav-logo:hover {
         transform: scale(1.05);
-        border-bottom: none;
+        color: var(--theme-accent);
       }
 
       .article-nav-title {
@@ -166,15 +166,15 @@ const theme = {
         font-weight: 500;
         border-radius: var(--radius-pill);
         border: none;
-        border-bottom: none;
         background: rgba(128, 128, 128, 0.15);
+        color: var(--theme-text);
         transition: all 0.2s ease;
       }
 
       .nav-btn:hover {
         background: rgba(128, 128, 128, 0.25);
         transform: scale(1.05);
-        border-bottom: none;
+        color: var(--theme-accent);
       }
 
       /* Article Container */
@@ -336,14 +336,14 @@ const theme = {
         background: rgba(128, 128, 128, 0.08);
         border-radius: var(--radius-card);
         border: none;
-        border-bottom: none;
+        color: var(--theme-text);
         transition: all 0.2s ease;
       }
 
       .post-nav-item a:hover {
         background: rgba(128, 128, 128, 0.15);
         transform: scale(1.02);
-        border-bottom: none;
+        color: var(--theme-accent);
       }
 
       .post-nav-label {

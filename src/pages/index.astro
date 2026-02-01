@@ -12,6 +12,7 @@ const getExcerpt = (body: string, maxLength = 100) => {
   // Remove markdown formatting and get plain text
   const plainText = body
     .replace(/^---[\s\S]*?---/, '') // Remove frontmatter
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to text
     .replace(/[#*_`>\[\]]/g, '') // Remove markdown symbols
     .replace(/\n+/g, ' ') // Replace newlines with spaces
     .trim();

@@ -3,23 +3,15 @@ import { getCollection } from 'astro:content';
 
 const { frontmatter, slug } = Astro.props;
 
-// Get all posts to find prev/next
+// Get all posts to find prev/next (sorted alphabetically by title)
 const allPosts = await getCollection('posts');
 const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  a.data.title.localeCompare(b.data.title, 'zh-CN')
 );
 
 const currentIndex = sortedPosts.findIndex(post => post.slug === slug);
-const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
-const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
-
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
+const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
 // Default theme for all posts
 const theme = {
@@ -443,11 +435,6 @@ const theme = {
       <article>
         <header class="article-header">
           <h1 class="article-title">{frontmatter.title}</h1>
-          <div class="article-meta">
-            <time datetime={frontmatter.date.toISOString()}>
-              {formatDate(frontmatter.date)}
-            </time>
-          </div>
         </header>
 
         <div class="article-divider"></div>

@@ -4,25 +4,8 @@ import { getCollection } from 'astro:content';
 
 const posts = await getCollection('posts');
 const sortedPosts = posts.sort((a, b) => 
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  a.data.title.localeCompare(b.data.title, 'zh-CN')
 );
-
-// Group posts by year
-const postsByYear = sortedPosts.reduce((acc, post) => {
-  const year = new Date(post.data.date).getFullYear();
-  if (!acc[year]) acc[year] = [];
-  acc[year].push(post);
-  return acc;
-}, {} as Record<number, typeof posts>);
-
-const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
-
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('zh-CN', {
-    month: 'short',
-    day: 'numeric'
-  });
-};
 ---
 
 <BaseLayout title="归档">
@@ -30,27 +13,17 @@ const formatDate = (date: Date) => {
     <h1 class="page-title">归档</h1>
     <p class="page-subtitle">共 {posts.length} 篇文章</p>
     
-    {years.map(year => (
-      <section class="archive-section">
-        <h2 class="archive-year">{year}</h2>
-        <ul class="post-list">
-          {postsByYear[Number(year)].map(post => (
-            <li class="post-item">
-              <div class="post-date">
-                <time datetime={post.data.date.toISOString()}>
-                  {formatDate(post.data.date)}
-                </time>
-              </div>
-              <div class="post-info">
-                <h3 class="post-title">
-                  <a href={`/posts/${post.slug}`}>{post.data.title}</a>
-                </h3>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    <ul class="post-list">
+      {sortedPosts.map(post => (
+        <li class="post-item">
+          <div class="post-info">
+            <h3 class="post-title">
+              <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+            </h3>
+          </div>
+        </li>
+      ))}
+    </ul>
   </div>
 </BaseLayout>
 
@@ -60,23 +33,13 @@ const formatDate = (date: Date) => {
     margin: 0 auto;
   }
 
-  .archive-section {
-    margin-bottom: 3rem;
-  }
-
-  .archive-year {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    font-weight: 400;
+  .post-list {
+    list-style: none;
+    padding: 0;
     margin-top: 2rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.2;
   }
 
   .post-item {
-    display: flex;
-    align-items: baseline;
-    gap: 24px;
     padding: 1rem 0;
     border-bottom: 1px solid rgba(45, 32, 17, 0.1);
   }
@@ -85,20 +48,9 @@ const formatDate = (date: Date) => {
     border-bottom: none;
   }
 
-  .post-date {
-    flex-shrink: 0;
-    width: 80px;
-    font-family: var(--font-heading);
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-  }
-
   .post-info {
-    flex: 1;
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
   }
 
   .post-title {
@@ -114,22 +66,5 @@ const formatDate = (date: Date) => {
 
   .post-title a:hover {
     opacity: 0.7;
-  }
-
-  @media (max-width: 600px) {
-    .post-item {
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .post-date {
-      width: auto;
-    }
-
-    .post-info {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
   }
 </style>

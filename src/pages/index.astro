@@ -4,16 +4,8 @@ import { getCollection } from 'astro:content';
 
 const posts = await getCollection('posts');
 const sortedPosts = posts.sort((a, b) => 
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  a.data.title.localeCompare(b.data.title, 'zh-CN')
 );
-
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
 
 // Get first ~80 characters of content for excerpt (simplified approach)
 const getExcerpt = (body: string, maxLength = 100) => {
@@ -37,11 +29,6 @@ const getExcerpt = (body: string, maxLength = 100) => {
           <div class="post-card-content">
             <h2 class="post-card-title">{post.data.title}</h2>
             <p class="post-card-excerpt">{getExcerpt(post.body)}</p>
-            <div class="post-card-meta">
-              <time datetime={post.data.date.toISOString()}>
-                {formatDate(post.data.date)}
-              </time>
-            </div>
           </div>
         </a>
       </li>

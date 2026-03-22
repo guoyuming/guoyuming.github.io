@@ -26,13 +26,7 @@ const sortedProjects = projects.sort((a, b) => {
         return (
           <li class="browser-frame">
             <a href={`/projects/${project.slug}`} class="browser-frame-link">
-              <div class="browser-topbar">
-                <div class="window-controls">
-                  <span class="dot dot-close"></span>
-                  <span class="dot dot-minimize"></span>
-                  <span class="dot dot-maximize"></span>
-                </div>
-              </div>
+              <div class="browser-topbar"></div>
               <div class="browser-content">
                 <img
                   src={coverImage}
@@ -62,17 +56,19 @@ const sortedProjects = projects.sort((a, b) => {
     margin: 0 auto;
   }
 
-  /* ---- Browser Frame Card ---- */
+  /* ---- Browser Frame Card (Light default) ---- */
   .browser-frame {
     border-radius: 12px;
     overflow: hidden;
-    background: #2D2D2D;
+    background: #EAEAEA;
+    border: 1px solid var(--color-border);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .browser-frame:hover {
     transform: scale(1.015);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    border-color: var(--color-border-hover);
+    box-shadow: var(--card-shadow);
   }
 
   .browser-frame-link {
@@ -84,40 +80,16 @@ const sortedProjects = projects.sort((a, b) => {
   /* ---- Top Bar ---- */
   .browser-topbar {
     height: 28px;
-    background: #2D2D2D;
+    background: #F3F3F3;
     display: flex;
     align-items: center;
     padding: 0 12px;
   }
 
-  .window-controls {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-  }
-
-  .dot-close {
-    background: #FF5F56;
-  }
-
-  .dot-minimize {
-    background: #FFBD2E;
-  }
-
-  .dot-maximize {
-    background: #27C93F;
-  }
-
-  /* ---- Content Area ---- */
+/* ---- Content Area ---- */
   .browser-content {
     position: relative;
-    background: #363638;
+    background: #F8F8F8;
     aspect-ratio: 16 / 9;
   }
 
@@ -134,8 +106,8 @@ const sortedProjects = projects.sort((a, b) => {
     bottom: 0;
     left: 0;
     padding: 4px 12px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.8);
+    color: #333333;
     font-family: var(--font-heading, 'Instrument Sans', sans-serif);
     font-size: 0.875rem;
     font-weight: 500;
@@ -146,26 +118,32 @@ const sortedProjects = projects.sort((a, b) => {
   .empty-state {
     text-align: center;
     padding: 80px 20px;
-    color: var(--color-text-muted, rgba(235, 229, 222, 0.5));
+    color: var(--color-text-muted);
     font-size: 1.1rem;
   }
 
-  /* ---- Light Theme ---- */
-  :global([data-theme="light"]) .browser-frame {
-    border: 1px solid #D1D1D1;
+  /* ---- Dark Theme Override ---- */
+  :global([data-theme="dark"]) .browser-frame {
+    background: #2D2D2D;
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
-  :global([data-theme="light"]) .browser-topbar {
-    background: #EAEAEA;
+  :global([data-theme="dark"]) .browser-frame:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  :global([data-theme="light"]) .browser-content {
-    background: #F8F8F8;
+  :global([data-theme="dark"]) .browser-topbar {
+    background: #2D2D2D;
   }
 
-  :global([data-theme="light"]) .project-label {
-    background: rgba(255, 255, 255, 0.8);
-    color: #333333;
+  :global([data-theme="dark"]) .browser-content {
+    background: #363638;
+  }
+
+  :global([data-theme="dark"]) .project-label {
+    background: rgba(0, 0, 0, 0.6);
+    color: #FFFFFF;
   }
 
   /* ---- Responsive ---- */

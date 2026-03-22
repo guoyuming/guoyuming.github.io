@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+
+const sortedProjects = projects.sort((a, b) => {
+  if (a.data.order !== undefined && b.data.order !== undefined) {
+    return a.data.order - b.data.order;
+  }
+  if (a.data.order !== undefined) return -1;
+  if (b.data.order !== undefined) return 1;
+  return a.data.title.localeCompare(b.data.title, 'zh-CN');
+});
+---
+
+<BaseLayout title="Project">
+  <h2 class="section-heading">Project</h2>
+
+  {sortedProjects.length === 0 ? (
+    <p class="empty-state">Coming soon.</p>
+  ) : (
+    <ul class="project-grid">
+      {sortedProjects.map((project) => {
+        const coverImage = project.data.cover || `/images/projects/${project.slug}/cover.png`;
+        return (
+          <li class="project-card">
+            <a href={`/projects/${project.slug}`} class="project-card-link">
+              <img
+                src={coverImage}
+                alt={project.data.title}
+                class="project-card-image"
+                loading="lazy"
+              />
+              <div class="project-card-overlay">
+                <h3 class="project-card-title">{project.data.title}</h3>
+                {project.data.description && (
+                  <p class="project-card-desc">{project.data.description}</p>
+                )}
+              </div>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  )}
+</BaseLayout>
+
+<style>
+  .project-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 28px;
+    max-width: var(--max-width, 1440px);
+    margin: 0 auto;
+  }
+
+  .project-card {
+    position: relative;
+    border-radius: var(--radius-card, 20px);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--color-border, rgba(255,255,255,0.08));
+    transition: all 0.2s ease;
+    background: var(--color-surface, #1a1929);
+  }
+
+  .project-card:hover {
+    transform: scale(1.015);
+    border-color: var(--color-border-hover, rgba(255,255,255,0.18));
+    box-shadow: var(--card-shadow, 0 8px 32px rgba(0,0,0,0.3));
+  }
+
+  .project-card-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .project-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+    color: #fff;
+  }
+
+  .project-card-title {
+    font-family: var(--font-heading, 'Instrument Sans', sans-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .project-card-desc {
+    font-size: 0.875rem;
+    margin: 6px 0 0;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--color-text-muted, rgba(235,229,222,0.5));
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 480px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+</style>

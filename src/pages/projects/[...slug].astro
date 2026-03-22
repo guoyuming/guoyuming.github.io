@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const coverImage = project.data.cover || `/images/projects/${project.slug}/cover.png`;
+---
+
+<BaseLayout title={project.data.title}>
+  <article class="project-detail">
+    <img src={coverImage} alt={project.data.title} class="project-hero" />
+
+    <header class="project-header">
+      <h1 class="project-title">{project.data.title}</h1>
+      {project.data.description && (
+        <p class="project-description">{project.data.description}</p>
+      )}
+      {project.data.url && (
+        <a href={project.data.url} target="_blank" rel="noopener noreferrer" class="project-link">
+          Visit Project &rarr;
+        </a>
+      )}
+    </header>
+
+    <div class="project-body">
+      <Content />
+    </div>
+
+    <footer class="project-footer">
+      <a href="/projects" class="back-link">&larr; All Projects</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail {
+    max-width: var(--content-width, 660px);
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  .project-hero {
+    width: 100%;
+    border-radius: var(--radius-card, 20px);
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin-bottom: 40px;
+  }
+
+  .project-header {
+    margin-bottom: 48px;
+  }
+
+  .project-title {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    color: var(--color-text, #ebe5de);
+  }
+
+  .project-description {
+    font-size: 1.15rem;
+    color: var(--color-text-muted, rgba(235,229,222,0.6));
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .project-link {
+    display: inline-block;
+    font-size: 0.95rem;
+    color: var(--color-accent, #e4432e);
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+
+  .project-link:hover {
+    opacity: 0.8;
+  }
+
+  .project-body {
+    color: var(--color-text, #ebe5de);
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .project-body :global(h2) {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    font-size: 1.5rem;
+    margin: 2em 0 0.8em;
+    color: var(--color-text, #ebe5de);
+  }
+
+  .project-body :global(h3) {
+    font-size: 1.2rem;
+    margin: 1.5em 0 0.6em;
+    color: var(--color-text, #ebe5de);
+  }
+
+  .project-body :global(p) {
+    margin: 0 0 1.2em;
+  }
+
+  .project-body :global(img) {
+    max-width: 100%;
+    border-radius: var(--radius-sm, 8px);
+    margin: 1.5em 0;
+  }
+
+  .project-body :global(a) {
+    color: var(--color-accent, #e4432e);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .project-footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border, rgba(255,255,255,0.08));
+  }
+
+  .back-link {
+    color: var(--color-text-muted, rgba(235,229,222,0.6));
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--color-text, #ebe5de);
+  }
+
+  @media (max-width: 768px) {
+    .project-title {
+      font-size: 1.8rem;
+    }
+
+    .project-detail {
+      padding: 20px 16px 60px;
+    }
+  }
+</style>

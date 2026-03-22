@@ -31,6 +31,35 @@ const theme = {
   accent: '#8b4513',
   muted: '#6b6b6b'
 };
+
+// SEO
+const description = frontmatter.description || "Yuming's Blog - 产品、技术与思考";
+const canonicalURL = new URL(`/posts/${slug}`, Astro.site);
+const pageTitle = `${frontmatter.title} | Yuming`;
+
+// JSON-LD structured data
+const jsonLD = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": frontmatter.title,
+  "description": description,
+  "author": {
+    "@type": "Person",
+    "name": "Yuming",
+    "url": "https://guoyuming.github.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Yuming"
+  },
+  "datePublished": frontmatter.date?.toISOString(),
+  "dateModified": frontmatter.date?.toISOString(),
+  "url": canonicalURL.href,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.href
+  }
+};
 ---
 
 <!doctype html>
@@ -38,9 +67,29 @@ const theme = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={frontmatter.description || "郭雨明的博客"} />
+    <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/android-chrome-512x512.png" />
-    <title>{frontmatter.title} | Yuming</title>
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="Yuming's Blog RSS" href="/rss.xml" />
+    <title>{pageTitle}</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="Yuming's Blog" />
+    {frontmatter.date && <meta property="article:published_time" content={frontmatter.date.toISOString()} />}
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -483,7 +532,7 @@ const theme = {
     </main>
 
     <footer class="article-footer">
-      <p>&copy; 2017-{new Date().getFullYear()} 郭雨明</p>
+      <p>&copy; 2017-{new Date().getFullYear()} Yuming</p>
     </footer>
   </body>
 </html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://guoyuming.github.io/sitemap-index.xml

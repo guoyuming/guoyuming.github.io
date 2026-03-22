@@ -12,11 +12,45 @@ function slugToTitle(slug: string): string {
 
 const posts = await getCollection('posts');
 
+// WeChat article mapping: slug → { url, title }
+const wechatMap: Record<string, { url: string; title: string }> = {
+  '为什么泡沫是好的': { url: 'https://mp.weixin.qq.com/s/5Q_LdJWBcYBdPsLI10-E8w', title: '为什么 AI 泡沫是好的？' },
+  'manus-启示录': { url: 'https://mp.weixin.qq.com/s/caZy8yYruyFMQNCWtw9dYw', title: 'Manus 产品启示录' },
+  '什么是真正-ai-native-产品设计': { url: 'https://mp.weixin.qq.com/s/SImvkVqsrGdYEGHXDLSQ1g', title: '什么是 AI Native 产品设计' },
+  '深度研究几十个海外建站-saas-的精选案例让你掌握如何做-onboarding': { url: 'https://mp.weixin.qq.com/s/88OxLVpuLiAYiv3pxT1EQQ', title: '深度研究几十个海外 SaaS 总结出的 Onboarding 关键要素' },
+  'vibe-coding-和个人专有-app': { url: 'https://mp.weixin.qq.com/s/9vDkgFL-i7qB-3XfLAPp4Q', title: 'Vibe coding 和个人专有 App' },
+  'lovart-增长观察2025-年内有效': { url: 'https://mp.weixin.qq.com/s/w8l9vaCXFDwAB-9HxCRYmA', title: 'Lovart 增长做对了什么' },
+  'vibe-coding-用户场景和-pmf': { url: 'https://mp.weixin.qq.com/s/_YhQLRVB2oAvmikhuBrG-A', title: '谁在用 Vibe coding？' },
+  'lovable-vibe-coding-和自我表达': { url: 'https://mp.weixin.qq.com/s/8pUD46AYaTOK7rkfreN30Q', title: 'Lovable, Vibe Coding 和自我表达' },
+  'replit-从-ide-到-coding-agent-的-10-年-接力': { url: 'https://mp.weixin.qq.com/s/wlgm4mk9k6KEPTHCjju98A', title: 'Replit：从 IDE 到 Coding Agent 的 10 年 接力' },
+  '微信小程序和操作系统': { url: 'https://mp.weixin.qq.com/s/QDZjiULcYWEJI8ESXenS1g', title: '微信小程序和操作系统' },
+  '我是如何用-ai-提高生产力的': { url: 'https://mp.weixin.qq.com/s/TAEaR361VH_R70UqR3c8eg', title: '如何提升工作的含 AI 量' },
+  '人为什么需要品牌': { url: 'https://mp.weixin.qq.com/s/jvQGEtxJOZV3lgFZH57Jow', title: '用户为什么需要品牌？' },
+  'dify-的产品思考': { url: 'https://mp.weixin.qq.com/s/pnb1XnZ2eeAuF8AlUUdeng', title: '用 Dify 可以做什么' },
+  '为-ai-模型做产品': { url: 'https://mp.weixin.qq.com/s/iYzz5LXVvUpwr6zZgyHAeg', title: '为 AI 模型做产品' },
+  'saas-产品的价值是什么': { url: 'https://mp.weixin.qq.com/s/YsOxRJxDKwIDxEuvhh_-gA', title: 'SaaS 产品的价值是什么？' },
+  '如何做产品规划': { url: 'https://mp.weixin.qq.com/s/vnms_9SpphXbd0MY1K5x2Q', title: '如何做产品规划' },
+  '如何晋升答辩评委视角建议收藏备用': { url: 'https://mp.weixin.qq.com/s/jfgbgEY2xX3vVCGR_2hLcA', title: '如何晋升答辩？评委视角建议（收藏备用）' },
+  'gtd-及其应用': { url: 'https://mp.weixin.qq.com/s/9Q7Iih9_RqUHo3WvzMP5Kg', title: 'GTD（搞定一切） 及其应用' },
+  '什么是运营': { url: 'https://mp.weixin.qq.com/s/3Edu2_xLe8Ah21lEU4iY7A', title: '什么是运营？' },
+  'chatgpt-应用场景分析消费者评价': { url: 'https://mp.weixin.qq.com/s/S5wag25aNYPZu6Ph2c0bjw', title: 'ChatGPT 应用场景：分析消费者评价' },
+  'chatgtp-通用性如何改造软件行业': { url: 'https://mp.weixin.qq.com/s/3WMatBIB3B7-YlunqHMQrg', title: 'ChatGTP 通用性如何改造软件行业' },
+  'chatgpt-与知识工作者的窘境': { url: 'https://mp.weixin.qq.com/s/xWF3VVVFvVfbJgB4ZrCEfQ', title: 'ChatGPT 与知识工作者的窘境' },
+  '创业者的差异化竞争': { url: 'https://mp.weixin.qq.com/s/Mrr3UPtoCstKP2C7bUmvSA', title: '创业者的差异化竞争' },
+  'ai-生成新闻摘要-各公司-api-对比': { url: 'https://mp.weixin.qq.com/s/Q_ZDA0B40bMBwChWMH74-Q', title: 'AI 生成新闻摘要-各公司开放 API 对比' },
+  '用-rice-框架评估优先级': { url: 'https://mp.weixin.qq.com/s/EwM-ccGY3ZHHu6iC2E1xnw', title: '用 RICE 框架评估优先级' },
+  '210407-海外aso入门指南': { url: 'https://mp.weixin.qq.com/s/ID45L5MbXjStQElRVtFuPQ', title: '海外ASO入门指南' },
+  '210317-ark-investsaas-将迎来下一个黄金十年': { url: 'https://mp.weixin.qq.com/s/GSw8JPoN_RiTT03e5n8vCg', title: 'ARK Invest：SaaS 将迎来下一个黄金十年？' },
+};
+
+const getPostUrl = (slug: string) => wechatMap[slug]?.url || `/posts/${slug}`;
+const isExternal = (slug: string) => slug in wechatMap;
+
 // Add derived titles and sort
 const sortedPosts = posts
   .map(post => ({
     ...post,
-    displayTitle: post.data.title || slugToTitle(post.slug)
+    displayTitle: wechatMap[post.slug]?.title || post.data.title || slugToTitle(post.slug)
   }))
   .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle, 'zh-CN'));
 
@@ -47,12 +81,14 @@ const getExcerpt = (body: string, maxLength = 200) => {
       
       <nav class="article-list" role="listbox" aria-label="文章列表">
         {sortedPosts.map((post, index) => (
-          <button 
+          <button
             class={`article-item ${index === 0 ? 'is-active' : ''}`}
             data-index={index}
             data-slug={post.slug}
             data-title={post.displayTitle}
             data-excerpt={getExcerpt(post.body)}
+            data-url={getPostUrl(post.slug)}
+            data-external={isExternal(post.slug) ? 'true' : 'false'}
             role="option"
             aria-selected={index === 0 ? 'true' : 'false'}
           >
@@ -65,10 +101,11 @@ const getExcerpt = (body: string, maxLength = 200) => {
 
     <!-- Right Panel: Preview Card -->
     <section class="preview-panel">
-      <a 
-        href={`/posts/${sortedPosts[0]?.slug}`} 
-        class="preview-card" 
+      <a
+        href={sortedPosts[0] ? getPostUrl(sortedPosts[0].slug) : '#'}
+        class="preview-card"
         id="preview-card"
+        {...(sortedPosts[0] && isExternal(sortedPosts[0].slug) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       >
         <article class="preview-card-inner">
           <div class="preview-content">
@@ -365,11 +402,14 @@ const getExcerpt = (body: string, maxLength = 200) => {
     function updatePreview(item) {
       var title = item.dataset.title;
       var excerpt = item.dataset.excerpt;
-      var slug = item.dataset.slug;
-      
+      var url = item.dataset.url;
+      var external = item.dataset.external === 'true';
+
       previewTitle.textContent = title;
       previewExcerpt.textContent = excerpt;
-      previewCard.href = '/posts/' + slug;
+      previewCard.href = url;
+      previewCard.target = external ? '_blank' : '';
+      previewCard.rel = external ? 'noopener noreferrer' : '';
     }
     
     // Set active state on article item
@@ -407,7 +447,11 @@ const getExcerpt = (body: string, maxLength = 200) => {
           newIndex = Math.max(currentIndex - 1, 0);
         } else if (e.key === 'Enter') {
           e.preventDefault();
-          window.location.href = previewCard.href;
+          if (previewCard.target === '_blank') {
+            window.open(previewCard.href, '_blank', 'noopener,noreferrer');
+          } else {
+            window.location.href = previewCard.href;
+          }
           return;
         }
         

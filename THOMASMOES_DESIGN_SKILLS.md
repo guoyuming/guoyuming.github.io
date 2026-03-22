@@ -95,6 +95,33 @@ body {
 }
 ```
 
+### 1.2.1 Complete Color Palette (42 Colors)
+
+The full color palette extracted from Figma design files, supplementing the CSS variables above:
+
+| 颜色预览 | 十六进制代码 (HEX) | 颜色预览 | 十六进制代码 (HEX) |
+| :---: | :--- | :---: | :--- |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#140808; border:1px solid #ccc;'></span> | `#140808` | <span style='display:inline-block; width:20px; height:20px; background-color:#222222; border:1px solid #ccc;'></span> | `#222222` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#332822; border:1px solid #ccc;'></span> | `#332822` | <span style='display:inline-block; width:20px; height:20px; background-color:#628147; border:1px solid #ccc;'></span> | `#628147` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#000000; border:1px solid #ccc;'></span> | `#000000` | <span style='display:inline-block; width:20px; height:20px; background-color:#0082F3; border:1px solid #ccc;'></span> | `#0082F3` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#0B1111; border:1px solid #ccc;'></span> | `#0B1111` | <span style='display:inline-block; width:20px; height:20px; background-color:#0D0C16; border:1px solid #ccc;'></span> | `#0D0C16` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#85D63F; border:1px solid #ccc;'></span> | `#85D63F` | <span style='display:inline-block; width:20px; height:20px; background-color:#0E0A05; border:1px solid #ccc;'></span> | `#0E0A05` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#A4805B; border:1px solid #ccc;'></span> | `#A4805B` | <span style='display:inline-block; width:20px; height:20px; background-color:#CC251C; border:1px solid #ccc;'></span> | `#CC251C` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#CF5C36; border:1px solid #ccc;'></span> | `#CF5C36` | <span style='display:inline-block; width:20px; height:20px; background-color:#D7CABC; border:1px solid #ccc;'></span> | `#D7CABC` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#D7D5D8; border:1px solid #ccc;'></span> | `#D7D5D8` | <span style='display:inline-block; width:20px; height:20px; background-color:#D9B988; border:1px solid #ccc;'></span> | `#D9B988` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#DFEBEC; border:1px solid #ccc;'></span> | `#DFEBEC` | <span style='display:inline-block; width:20px; height:20px; background-color:#E4432E; border:1px solid #ccc;'></span> | `#E4432E` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#E78A2E; border:1px solid #ccc;'></span> | `#E78A2E` | <span style='display:inline-block; width:20px; height:20px; background-color:#E8E7E7; border:1px solid #ccc;'></span> | `#E8E7E7` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#EBE5DE; border:1px solid #ccc;'></span> | `#EBE5DE` | <span style='display:inline-block; width:20px; height:20px; background-color:#EE7257; border:1px solid #ccc;'></span> | `#EE7257` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#F0EEED; border:1px solid #ccc;'></span> | `#F0EEED` | <span style='display:inline-block; width:20px; height:20px; background-color:#F42E2B; border:1px solid #ccc;'></span> | `#F42E2B` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#F5C517; border:1px solid #ccc;'></span> | `#F5C517` | <span style='display:inline-block; width:20px; height:20px; background-color:#F6F4F3; border:1px solid #ccc;'></span> | `#F6F4F3` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#F6F8F9; border:1px solid #ccc;'></span> | `#F6F8F9` | <span style='display:inline-block; width:20px; height:20px; background-color:#F9DD5A; border:1px solid #ccc;'></span> | `#F9DD5A` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#FAFAFA; border:1px solid #ccc;'></span> | `#FAFAFA` | <span style='display:inline-block; width:20px; height:20px; background-color:#FEF4EC; border:1px solid #ccc;'></span> | `#FEF4EC` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#FEF7E9; border:1px solid #ccc;'></span> | `#FEF7E9` | <span style='display:inline-block; width:20px; height:20px; background-color:#FFFFFF; border:1px solid #ccc;'></span> | `#FFFFFF` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#FF472A; border:1px solid #ccc;'></span> | `#FF472A` | <span style='display:inline-block; width:20px; height:20px; background-color:#1A0C12; border:1px solid #ccc;'></span> | `#1A0C12` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#1D2C27; border:1px solid #ccc;'></span> | `#1D2C27` | <span style='display:inline-block; width:20px; height:20px; background-color:#22265C; border:1px solid #ccc;'></span> | `#22265C` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#2D2011; border:1px solid #ccc;'></span> | `#2D2011` | <span style='display:inline-block; width:20px; height:20px; background-color:#2E201F; border:1px solid #ccc;'></span> | `#2E201F` |
+| <span style='display:inline-block; width:20px; height:20px; background-color:#3624E7; border:1px solid #ccc;'></span> | `#3624E7` | <span style='display:inline-block; width:20px; height:20px; background-color:#3749E5; border:1px solid #ccc;'></span> | `#3749E5` |
+
 ### 1.3 Link Styling (Distinctive Pattern)
 
 ```css
@@ -953,6 +980,74 @@ window.onload = function() {
 }
 ```
 
+### 2.9.1 Heading Typography Reference (All Variations)
+
+Structured reference of all heading font/size/weight/color combinations extracted from Figma:
+
+| 文本层级 | 字体家族 (Font Family) | 字号 (Size) | 行高 (Line Height) | 字重 (Weight) | 字母间距 | 文本颜色 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Heading 2 | Gt Ultra Fine Trial | 40px | 56px | 400 | normal | `#FFFFFF` |
+| Heading 2 | Gt Ultra Fine Trial | 40px | 56px | 400 | normal | `#2D2011` |
+| Heading 3 | Ergon Trial | 30px | 36px | 400 | normal | `#000000` |
+| Heading 3 | Eckmann | 30px | 36px | 500 | normal | `#0B1111` |
+| Heading 3 | Instrument Sans | 30px | 36px | 700 | normal | `#CC251C` |
+| Heading 3 | Coconat Demi | 30px | 36px | 400 | normal | `#D9B988` |
+| Heading 3 | Helvetica | 30px | 36px | 700 | normal | `#E4432E` |
+| Heading 3 | Gtflexatrial Xexpbdit | 30px | 36px | 400 | normal | `#E78A2E` |
+| Heading 3 | gtwalsheimpro | 30px | 36px | 300 | normal | `#F5C517` |
+| Heading 3 | Microgramma D Extended | 30px | 36px | 700 | normal | `#F9DD5A` |
+| Heading 3 | Sharpgrotesk 20 | 30px | 36px | 500 | normal | `#FFFFFF` |
+| Heading 3 | Konstruktor | 30px | 36px | 400 | normal | `#FFFFFF` |
+| Heading 3 | Sharpgrotesk 20 | 30px | 36px | 500 | normal | `#FFFFFF` |
+| Heading 3 | Aeonik | 30px | 36px | 700 | normal | `#FFFFFF` |
+| Heading 3 | Demo Etna | 30px | 36px | 500 | normal | `#FF472A` |
+| Heading 3 | onari | 30px | 36px | 700 | normal | `#2E201F` |
+| Heading 3 | GT Ultra Fine Trial | 30px | 36px | 300 | normal | `#332822` |
+| Heading 3 | Instrument Sans | 30px | 36px | 700 | normal | `#3749E5` |
+
+### 2.9.2 Paragraph Typography Reference (All Variations)
+
+Structured reference of all paragraph font/size/weight/color combinations extracted from Figma:
+
+| 文本层级 | 字体家族 (Font Family) | 字号 (Size) | 行高 (Line Height) | 字重 (Weight) | 字母间距 | 文本颜色 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Paragraph | Ergon Trial | 80px | 88px | 400 | normal | `#000000` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#000000` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#0B1111` |
+| Paragraph | Eckmann | 80px | 88px | 500 | normal | `#0B1111` |
+| Paragraph | Instrument Sans | 80px | 88px | 700 | normal | `#CC251C` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#CC251C` |
+| Paragraph | Coconat Demi | 80px | 88px | 400 | normal | `#D9B988` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#D9B988` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#E4432E` |
+| Paragraph | Helvetica | 80px | 88px | 700 | normal | `#E4432E` |
+| Paragraph | Gtflexatrial Xexpbdit | 80px | 88px | 400 | normal | `#E78A2E` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#E78A2E` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#F5C517` |
+| Paragraph | gtwalsheimpro | 80px | 88px | 300 | normal | `#F5C517` |
+| Paragraph | Microgramma D Extended | 80px | 88px | 400 | normal | `#F9DD5A` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#F9DD5A` |
+| Paragraph | Agipo | 18px | 25.2px | 400 | normal | `#FAFAFA` |
+| Paragraph | Gt Cinetype Trial | 80px | 88px | 500 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Joan | 80px | 88px | 600 | normal | `#FFFFFF` |
+| Paragraph | Sharpgrotesk 20 | 80px | 88px | 500 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Konstruktor | 80px | 88px | 400 | normal | `#FFFFFF` |
+| Paragraph | Sharpgrotesk 20 | 80px | 88px | 500 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Aeonik | 80px | 88px | 700 | normal | `#FFFFFF` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FFFFFF` |
+| Paragraph | Demo Etna | 80px | 88px | 500 | normal | `#FF472A` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#FF472A` |
+| Paragraph | Agipo | 22px | 30.8px | 400 | normal | `#2D2011` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#2E201F` |
+| Paragraph | onari | 80px | 88px | 400 | normal | `#2E201F` |
+| Paragraph | GT Ultra Fine Trial | 80px | 88px | 300 | normal | `#332822` |
+| Paragraph | Agipo | 20px | 28px | 400 | normal | `#332822` |
+
 ### 2.10 Body Container
 
 ```css
@@ -1083,6 +1178,7 @@ window.onload = function() {
 - **Body font**: Agipo (sans-serif) - clean, modern, geometric
 - **Heading font**: GT Ultra Fine Trial (serif) - elegant, refined
 - **Display font**: Instrument Sans (bold) - impactful headlines
+- **Additional heading fonts**: Aeonik (bold), Ergon Trial (serif)
 - **Article-specific fonts**: Dynamic assignment per content theme
 
 ### 2. Color Strategy
@@ -1117,3 +1213,31 @@ window.onload = function() {
 - Typography scales down on mobile
 - Navigation becomes hamburger menu on medium screens
 - Cards maintain minimum widths for readability
+
+---
+
+## §3. Design Tool Import Guides
+
+The design specification package includes palette files for different design tools:
+
+### 3.1 Sketch
+- **File**: `sketch palette.sketchpalette`
+- **Import**: Use the [Sketch Palettes](https://github.com/andrewfiorillo/sketch-palettes) plugin to import.
+
+### 3.2 Adobe (Photoshop/Illustrator/XD)
+- **File**: `adobe swatch.aco`
+- **Import**: Load via the Swatches panel in any Adobe application.
+
+### 3.3 Figma
+- **File**: `figma-colors.json`
+- **Import**: In Figma, go to `Resources → Plugins → Palette Importer` (plugin required). Use `Load File` and select `figma-colors.json`.
+
+---
+
+## §4. Interactive Design Files
+
+The package also includes three Hype 4 animation/interaction design files (`.h2d` format). These are binary proprietary files that require **Tumult Hype 4** to open and edit:
+
+1. `www_thomasmoes_com_1920w_default.h2d` (Homepage, 1920px width)
+2. `www_thomasmoes_com_about_1920w_default.h2d` (About page, 1920px width)
+3. `www_thomasmoes_com_play_1920w_default.h2d` (Play/showcase page, 1920px width)

@@ -29,18 +29,45 @@ const getExcerpt = (body: string, maxLength = 100) => {
     .replace(/[#*_`>\[\]]/g, '') // Remove markdown symbols
     .replace(/\n+/g, ' ') // Replace newlines with spaces
     .trim();
-  
+
   if (plainText.length <= maxLength) return plainText;
   return plainText.substring(0, maxLength).trim() + '...';
 };
+
+// Format number with leading zero
+const formatNum = (n: number) => String(n).padStart(2, '0');
 ---
 
 <BaseLayout title="首页">
+  <!-- Hero Section - ThomasMoes §1.6 -->
+  <section class="hero-section">
+    <div class="available-badge">
+      <span class="available-dot"></span>
+      写作中
+    </div>
+    <h2 class="hero-greeting">Hi, I'm Yuming</h2>
+    <h1 class="hero-title">
+      产品、技术<br/>与 <span class="accent">AI 思考</span>
+    </h1>
+    <div class="hero-subtitle">
+      <p>关于产品设计、SaaS、增长策略和人工智能的深度思考与实践记录。</p>
+    </div>
+    <a href="/archives" class="hero-cta">
+      浏览全部文章 &rarr;
+    </a>
+  </section>
+
+  <div class="line-divider"></div>
+
+  <!-- Section Heading - ThomasMoes §1.8 -->
+  <h2 class="section-heading">文章</h2>
+
   <ul class="post-grid">
     {sortedPosts.map((post, index) => (
       <li class="post-card">
         <a href={`/posts/${post.slug}`} class="post-card-link">
           <div class="post-card-content">
+            <div class="post-card-number">{formatNum(index + 1)}</div>
             <h2 class="post-card-title">{post.displayTitle}</h2>
             <p class="post-card-excerpt">{getExcerpt(post.body)}</p>
           </div>

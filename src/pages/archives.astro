@@ -89,9 +89,11 @@ const getExcerpt = (body: string, maxLength = 200) => {
             data-excerpt={getExcerpt(post.body)}
             data-url={getPostUrl(post.slug)}
             data-external={isExternal(post.slug) ? 'true' : 'false'}
+            data-number={String(index + 1).padStart(2, '0')}
             role="option"
             aria-selected={index === 0 ? 'true' : 'false'}
           >
+            <span class="article-item-number">{String(index + 1).padStart(2, '0')}</span>
             <span class="article-item-indicator"></span>
             <span class="article-item-title">{post.displayTitle}</span>
           </button>
@@ -108,6 +110,7 @@ const getExcerpt = (body: string, maxLength = 200) => {
         {...(sortedPosts[0] && isExternal(sortedPosts[0].slug) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       >
         <article class="preview-card-inner">
+          <div class="preview-number" id="preview-number">01</div>
           <div class="preview-content">
             <h2 class="preview-title" id="preview-title">
               {sortedPosts[0]?.displayTitle}
@@ -115,6 +118,10 @@ const getExcerpt = (body: string, maxLength = 200) => {
             <p class="preview-excerpt" id="preview-excerpt">
               {getExcerpt(sortedPosts[0]?.body || '')}
             </p>
+          </div>
+          <div class="preview-cta">
+            <span class="preview-cta-text">阅读文章</span>
+            <span class="preview-cta-arrow">&rarr;</span>
           </div>
         </article>
       </a>
@@ -131,6 +138,7 @@ const getExcerpt = (body: string, maxLength = 200) => {
     min-height: calc(100vh - var(--nav-height) - 200px);
     max-width: 1200px;
     margin: 0 auto;
+    padding-top: 20px;
   }
 
   /* Left Panel Styles */
@@ -150,15 +158,17 @@ const getExcerpt = (body: string, maxLength = 200) => {
 
   .page-title {
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 400;
     margin-bottom: 0.25rem;
   }
 
   .article-count {
-    font-size: 0.875rem;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
     color: var(--color-text-muted);
     margin: 0;
+    letter-spacing: 0.02em;
   }
 
   .article-list {
@@ -166,27 +176,14 @@ const getExcerpt = (body: string, maxLength = 200) => {
     overflow-y: auto;
     padding-right: 0.5rem;
     margin-right: -0.5rem;
-    
-    /* Custom scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(235, 229, 222, 0.2) transparent;
+
+    /* Hidden scrollbar - ThomasMoes §2.4 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .article-list::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .article-list::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .article-list::-webkit-scrollbar-thumb {
-    background: rgba(235, 229, 222, 0.2);
-    border-radius: 3px;
-  }
-
-  .article-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(235, 229, 222, 0.35);
+    display: none;
   }
 
   /* Article Item Styles */
@@ -195,8 +192,8 @@ const getExcerpt = (body: string, maxLength = 200) => {
     align-items: center;
     gap: 0.75rem;
     width: 100%;
-    padding: 0.875rem 1rem;
-    margin-bottom: 0.25rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 2px;
     background: transparent;
     border: none;
     border-radius: var(--radius-sm);
@@ -207,6 +204,17 @@ const getExcerpt = (body: string, maxLength = 200) => {
     color: var(--color-text);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+  }
+
+  /* Article Number - ThomasMoes §2.3 */
+  .article-item-number {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.3;
+    min-width: 1.5rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
   }
 
   .article-item-indicator {
@@ -228,6 +236,11 @@ const getExcerpt = (body: string, maxLength = 200) => {
     background: var(--color-bg-alt);
   }
 
+  .article-item:hover .article-item-number {
+    opacity: 0.7;
+    color: var(--color-accent);
+  }
+
   .article-item:hover .article-item-indicator {
     height: 1.25rem;
   }
@@ -238,6 +251,11 @@ const getExcerpt = (body: string, maxLength = 200) => {
 
   .article-item.is-active {
     background: var(--color-bg-alt);
+    color: var(--color-accent);
+  }
+
+  .article-item.is-active .article-item-number {
+    opacity: 1;
     color: var(--color-accent);
   }
 
@@ -266,8 +284,8 @@ const getExcerpt = (body: string, maxLength = 200) => {
     position: sticky;
     top: calc(var(--nav-height) + 60px);
     width: 100%;
-    max-width: 480px;
-    background: var(--color-bg-alt);
+    max-width: 500px;
+    background: var(--color-bg-card, var(--color-bg-alt));
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     overflow: hidden;
@@ -275,12 +293,13 @@ const getExcerpt = (body: string, maxLength = 200) => {
     cursor: pointer;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
   }
 
   .preview-card:hover {
     border-color: var(--color-accent);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 6px rgba(13, 12, 22, 1), 0 0 0 8px rgba(228, 67, 46, 0.3);
+    transform: scale(1.015);
   }
 
   @keyframes cardEnter {
@@ -295,16 +314,34 @@ const getExcerpt = (body: string, maxLength = 200) => {
   }
 
   .preview-card-inner {
-    padding: 2rem;
+    padding: 2rem 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+  }
+
+  /* Large Preview Number - ThomasMoes §2.3 */
+  .preview-number {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 400;
+    line-height: 1;
+    color: rgba(235, 229, 222, 0.06);
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+  }
+
+  .preview-card:hover .preview-number {
+    color: rgba(228, 67, 46, 0.15);
   }
 
   .preview-content {
-    min-height: 180px;
+    flex: 1;
   }
 
   .preview-title {
     font-family: var(--font-heading);
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.35;
     margin-bottom: 1rem;
@@ -332,6 +369,33 @@ const getExcerpt = (body: string, maxLength = 200) => {
   .preview-excerpt.is-transitioning {
     opacity: 0;
     transform: translateY(-8px);
+  }
+
+  /* Preview CTA */
+  .preview-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+  }
+
+  .preview-card:hover .preview-cta {
+    color: var(--color-accent);
+  }
+
+  .preview-cta-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .preview-card:hover .preview-cta-arrow {
+    transform: translateX(4px);
   }
 
   /* Responsive Styles */
@@ -364,20 +428,30 @@ const getExcerpt = (body: string, maxLength = 200) => {
 
   @media (max-width: 480px) {
     .page-title {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
     }
 
     .article-item {
-      padding: 0.75rem;
+      padding: 0.625rem 0.75rem;
       font-size: 0.875rem;
+    }
+
+    .article-item-number {
+      font-size: 0.6875rem;
+      min-width: 1.25rem;
     }
 
     .preview-card-inner {
       padding: 1.5rem;
+      min-height: 300px;
+    }
+
+    .preview-number {
+      font-size: 3.5rem;
     }
 
     .preview-title {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
     }
 
     .preview-content {
@@ -392,21 +466,24 @@ const getExcerpt = (body: string, maxLength = 200) => {
     var articleItems = document.querySelectorAll('.article-item');
     var previewTitle = document.getElementById('preview-title');
     var previewExcerpt = document.getElementById('preview-excerpt');
+    var previewNumber = document.getElementById('preview-number');
     var previewCard = document.getElementById('preview-card');
-    
+
     if (!previewTitle || !previewExcerpt || !previewCard || articleItems.length === 0) return;
-    
+
     var currentItem = articleItems[0];
-    
+
     // Update preview card with data from the clicked item
     function updatePreview(item) {
       var title = item.dataset.title;
       var excerpt = item.dataset.excerpt;
       var url = item.dataset.url;
+      var number = item.dataset.number;
       var external = item.dataset.external === 'true';
 
       previewTitle.textContent = title;
       previewExcerpt.textContent = excerpt;
+      if (previewNumber) previewNumber.textContent = number;
       previewCard.href = url;
       previewCard.target = external ? '_blank' : '';
       previewCard.rel = external ? 'noopener noreferrer' : '';

@@ -36,23 +36,16 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
     <!-- Section 2: Project Header -->
     <header class="project-header">
-      <h1 class="project-title">{title}</h1>
-
-      {tags && tags.length > 0 && (
-        <div class="project-tags">
-          {tags.map((tag) => (
-            <span class="tag-pill">{tag}</span>
-          ))}
-        </div>
-      )}
-
-      {url ? (
-        <a href={url} target="_blank" rel="noopener noreferrer" class="project-cta">
-          <span data-i18n="visit_project">{urlLabel || 'Visit project'}</span> <span class="cta-arrow">↗</span>
-        </a>
-      ) : urlLabel ? (
-        <span class="project-badge">{urlLabel}</span>
-      ) : null}
+      <div class="project-title-row">
+        <h1 class="project-title">{title}</h1>
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer" class="project-cta">
+            <span data-i18n="visit_project">{urlLabel || 'Visit project'}</span> <span class="cta-arrow">↗</span>
+          </a>
+        ) : urlLabel ? (
+          <span class="project-badge">{urlLabel}</span>
+        ) : null}
+      </div>
     </header>
 
     <!-- Section 3: Description -->
@@ -71,7 +64,16 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
       </div>
     )}
 
-    <!-- Section 5: Footer Navigation -->
+    <!-- Section 5: Tags -->
+    {tags && tags.length > 0 && (
+      <div class="project-tags">
+        {tags.map((tag) => (
+          <span class="tag-pill">{tag}</span>
+        ))}
+      </div>
+    )}
+
+    <!-- Section 6: Footer Navigation -->
     <footer class="project-footer">
       <a href="/projects" class="back-link" data-i18n="all_projects">&larr; All Projects</a>
       {nextProject && nextProject.slug !== project.slug && (
@@ -102,16 +104,21 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
   .project-hero img {
     width: 100%;
+    height: auto;
     display: block;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
   }
 
   /* Section 2: Header */
   .project-header {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+  }
+
+  .project-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
   }
 
   .project-title {
@@ -123,37 +130,20 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
     line-height: 1.2;
   }
 
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag-pill {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-text-muted, rgba(235,229,222,0.6));
-    background: rgba(235,229,222,0.08);
-    border-radius: var(--radius-pill, 100px);
-    padding: 4px 12px;
-  }
-
   .project-cta {
     display: inline-flex;
     align-items: center;
-    align-self: flex-start;
     gap: 6px;
     font-size: 14px;
     font-weight: 600;
     padding: 10px 20px;
     border-radius: var(--radius-pill, 100px);
-    background: var(--color-accent, #e4432e);
-    color: #fff;
+    border: 1px solid var(--color-text-muted, rgba(235,229,222,0.6));
+    color: var(--color-text, #ebe5de);
     text-decoration: none;
     transition: opacity 0.2s;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .project-cta:hover {
@@ -166,7 +156,6 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
   .project-badge {
     display: inline-flex;
-    align-self: flex-start;
     font-size: 14px;
     font-weight: 600;
     padding: 10px 20px;
@@ -174,6 +163,25 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
     border: 1px solid var(--color-border, rgba(255,255,255,0.08));
     color: var(--color-text-muted, rgba(235,229,222,0.6));
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Tags (bottom of page) */
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag-pill {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: capitalize;
+    color: var(--color-text-muted, rgba(235,229,222,0.6));
+    background: rgba(235,229,222,0.08);
+    border-radius: var(--radius-pill, 100px);
+    padding: 4px 12px;
   }
 
   /* Section 3: Description */
@@ -272,6 +280,11 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
     .project-title {
       font-size: 1.75rem;
+    }
+
+    .project-title-row {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .project-gallery {

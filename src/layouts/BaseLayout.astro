@@ -37,7 +37,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     (function(){
       var t = localStorage.getItem('theme');
       if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-      var l = localStorage.getItem('lang') || 'zh';
+      var l = localStorage.getItem('lang') || 'en';
       document.documentElement.setAttribute('data-lang', l);
     })();
     </script>
@@ -841,27 +841,43 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         margin-bottom: 16px;
       }
 
-      .theme-toggle {
+      .footer-actions {
         position: absolute;
         right: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .theme-toggle,
+      .lang-toggle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
         background: var(--btn-bg);
         color: var(--color-text-muted);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-pill);
-        padding: 0 14px;
         height: 36px;
         font-family: var(--font-heading);
-        font-size: 0.8125rem;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s ease;
       }
 
-      .theme-toggle:hover {
+      .theme-toggle {
+        gap: 6px;
+        padding: 0 14px;
+        font-size: 0.8125rem;
+      }
+
+      .lang-toggle {
+        padding: 0 10px;
+        font-size: 0.75rem;
+      }
+
+      .theme-toggle:hover,
+      .lang-toggle:hover {
         background: var(--btn-hover);
         color: var(--color-text);
         transform: scale(1.05);
@@ -878,34 +894,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
       [data-theme="dark"] .theme-toggle .icon-moon { display: inline; }
 
-      /* Language Toggle */
-      .lang-toggle {
-        position: absolute;
-        right: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 10px;
-        height: 36px;
-        border-radius: var(--radius-pill);
-        background: var(--btn-bg);
-        color: var(--color-text-muted);
-        border: 1px solid var(--color-border);
-        cursor: pointer;
-        font-size: 0.75rem;
-        font-family: var(--font-heading);
-        font-weight: 500;
-        transition: all 0.2s ease;
-      }
-      .lang-toggle:hover {
-        background: var(--btn-hover);
-        color: var(--color-text);
-        transform: scale(1.05);
-      }
-      .lang-toggle .lang-zh { font-weight: 700; }
-      .lang-toggle .lang-en { opacity: 0.5; }
-      [data-lang="en"] .lang-toggle .lang-zh { font-weight: 400; opacity: 0.5; }
-      [data-lang="en"] .lang-toggle .lang-en { font-weight: 700; opacity: 1; }
+      .lang-toggle .lang-en { font-weight: 700; }
+      .lang-toggle .lang-zh { opacity: 0.5; }
+      [data-lang="zh"] .lang-toggle .lang-en { font-weight: 400; opacity: 0.5; }
+      [data-lang="zh"] .lang-toggle .lang-zh { font-weight: 700; opacity: 1; }
 
       /* ============================================================
          Responsive - ThomasMoes §7
@@ -1009,10 +1001,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <span class="site-logo-text">Yuming</span>
         </a>
         <nav class="site-nav">
-          <a href="/" data-i18n="home">首页</a>
-          <a href="/projects" data-i18n="project">项目</a>
-          <a href="/archives" data-i18n="writing">写作</a>
-          <a href="/tools" data-i18n="tool">工具</a>
+          <a href="/" data-i18n="home">Home</a>
+          <a href="/projects" data-i18n="project">Project</a>
+          <a href="/archives" data-i18n="writing">Writing</a>
+          <a href="/tools" data-i18n="tool">Tool</a>
         </nav>
       </div>
     </header>
@@ -1037,13 +1029,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             <svg viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05a6.137 6.137 0 01-.253-1.72c0-3.571 3.354-6.467 7.49-6.467.254 0 .507.013.754.032C16.837 4.632 13.088 2.188 8.691 2.188zm-2.27 3.95a1.346 1.346 0 110 2.692 1.346 1.346 0 010-2.692zm5.16 0a1.346 1.346 0 110 2.692 1.346 1.346 0 010-2.692zM16.74 10.5c-3.585 0-6.49 2.478-6.49 5.53 0 3.052 2.905 5.53 6.49 5.53a7.97 7.97 0 002.228-.318.636.636 0 01.529.07l1.407.823a.244.244 0 00.122.04c.118 0 .214-.096.214-.214a.46.46 0 00-.035-.156l-.289-1.094a.432.432 0 01.156-.49C22.48 19.14 23.23 17.447 23.23 16.03c0-3.052-2.905-5.53-6.49-5.53zm-2.394 3.12a1.042 1.042 0 110 2.083 1.042 1.042 0 010-2.083zm4.79 0a1.042 1.042 0 110 2.083 1.042 1.042 0 010-2.083z"/></svg>
           </button>
         </div>
-        <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">
-          <span class="lang-zh">中</span><span class="lang-sep">/</span><span class="lang-en">EN</span>
-        </button>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-          <svg class="icon-sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-2a4 4 0 100-8 4 4 0 000 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M10 7a7 7 0 0012 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0010 7zm-6 5a8 8 0 0011.955 6.956C13.271 18.6 11 15.98 11 12.9c0-3.08 2.271-5.7 4.955-6.056A8 8 0 004 12z"/></svg>
-        </button>
+        <div class="footer-actions">
+          <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">
+            <span class="lang-zh">中</span><span class="lang-sep">/</span><span class="lang-en">EN</span>
+          </button>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <svg class="icon-sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-2a4 4 0 100-8 4 4 0 000 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24"><path d="M10 7a7 7 0 0012 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0010 7zm-6 5a8 8 0 0011.955 6.956C13.271 18.6 11 15.98 11 12.9c0-3.08 2.271-5.7 4.955-6.056A8 8 0 004 12z"/></svg>
+          </button>
+        </div>
       </div>
       <p>&copy; 2017-{new Date().getFullYear()}</p>
     </footer>
@@ -1052,7 +1046,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="wechat-modal-content">
         <button class="wechat-modal-close" onclick="this.parentElement.parentElement.style.display='none'">&times;</button>
         <img src="/social/wechat-qr.png" alt="WeChat QR Code" />
-        <p data-i18n="wechat_scan">扫码关注微信</p>
+        <p data-i18n="wechat_scan">Scan to follow on WeChat</p>
       </div>
     </div>
     <script is:inline>
@@ -1087,7 +1081,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         wechat_scan: { zh: '扫码关注微信', en: 'Scan to follow on WeChat' },
         obsession: { zh: '沉迷', en: 'Obsession' }
       };
-      var lang = localStorage.getItem('lang') || 'zh';
+      var lang = localStorage.getItem('lang') || 'en';
       document.documentElement.setAttribute('data-lang', lang);
 
       function applyLang(l) {
@@ -1105,7 +1099,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       var btn = document.getElementById('lang-toggle');
       if (!btn) return;
       btn.addEventListener('click', function(){
-        var current = document.documentElement.getAttribute('data-lang') || 'zh';
+        var current = document.documentElement.getAttribute('data-lang') || 'en';
         var next = current === 'zh' ? 'en' : 'zh';
         localStorage.setItem('lang', next);
         applyLang(next);

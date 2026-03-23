@@ -48,7 +48,7 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
       {url ? (
         <a href={url} target="_blank" rel="noopener noreferrer" class="project-cta">
-          <span data-i18n="visit_project">{urlLabel || '访问项目'}</span> <span class="cta-arrow">↗</span>
+          <span data-i18n="visit_project">{urlLabel || 'Visit project'}</span> <span class="cta-arrow">↗</span>
         </a>
       ) : urlLabel ? (
         <span class="project-badge">{urlLabel}</span>
@@ -73,10 +73,10 @@ const nextProject = sorted[(currentIndex + 1) % sorted.length];
 
     <!-- Section 5: Footer Navigation -->
     <footer class="project-footer">
-      <a href="/projects" class="back-link" data-i18n="all_projects">&larr; 所有项目</a>
+      <a href="/projects" class="back-link" data-i18n="all_projects">&larr; All Projects</a>
       {nextProject && nextProject.slug !== project.slug && (
         <a href={`/projects/${nextProject.slug}`} class="next-link">
-          <span data-i18n="next_project">下一个：</span>{nextProject.data.title} &rarr;
+          <span data-i18n="next_project">Next: </span>{nextProject.data.title} &rarr;
         </a>
       )}
     </footer>

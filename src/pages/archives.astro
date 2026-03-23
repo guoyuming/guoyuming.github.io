@@ -75,7 +75,7 @@ const getExcerpt = (body: string, maxLength = 200) => {
     <!-- Left Panel: Article List -->
     <aside class="article-list-panel">
       <div class="panel-header">
-        <h1 class="page-title">Writing</h1>
+        <h1 class="page-title" data-i18n="writing">写作</h1>
         <p class="article-count">{posts.length} articles</p>
       </div>
       
@@ -298,7 +298,7 @@ const getExcerpt = (body: string, maxLength = 200) => {
 
   .preview-card:hover {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 6px rgba(13, 12, 22, 1), 0 0 0 8px rgba(228, 67, 46, 0.3);
+    box-shadow: 0 0 0 3px var(--color-accent);
     transform: scale(1.015);
   }
 

@@ -251,33 +251,6 @@ const jsonLD = {
         border-bottom: none;
       }
 
-      .article-nav-title {
-        flex: 1;
-        text-align: center;
-        margin: 0 40px;
-      }
-
-      .article-nav-subtitle {
-        font-family: var(--font-heading);
-        font-size: 0.6875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        opacity: 0.5;
-        margin-bottom: 2px;
-      }
-
-      .article-nav-title-text {
-        font-family: var(--font-heading);
-        font-size: 1rem;
-        font-weight: 700;
-        line-height: 1.6;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 400px;
-        margin: 0 auto;
-      }
-
       .article-nav-actions {
         display: flex;
         align-items: center;
@@ -289,9 +262,9 @@ const jsonLD = {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 5px 14px;
-        font-family: var(--font-heading);
-        font-size: 0.8rem;
+        padding: 6px 16px;
+        font-family: var(--font-display);
+        font-size: 0.95rem;
         font-weight: 500;
         border-radius: var(--radius-pill);
         border: none;
@@ -746,10 +719,6 @@ const jsonLD = {
           font-size: 1.25rem;
         }
 
-        .article-nav-title {
-          display: none;
-        }
-
         .article-container {
           padding: 48px 20px 60px;
         }
@@ -803,7 +772,7 @@ const jsonLD = {
 
         .nav-btn {
           padding: 6px 14px;
-          font-size: 0.75rem;
+          font-size: 0.875rem;
         }
       }
     </style>
@@ -813,10 +782,6 @@ const jsonLD = {
     <nav class="article-nav">
       <div class="article-nav-container">
         <a href="/" class="article-nav-logo">Yuming</a>
-        <div class="article-nav-title">
-          <div class="article-nav-subtitle" data-i18n="obsession">Obsession</div>
-          <div class="article-nav-title-text">{frontmatter.title}</div>
-        </div>
         <div class="article-nav-actions">
           <a href="/" class="nav-btn" data-i18n="home">Home</a>
           <a href="/projects" class="nav-btn" data-i18n="project">Project</a>
@@ -924,6 +889,7 @@ const jsonLD = {
       var translations = {
         home: { zh: '首页', en: 'Home' },
         project: { zh: '项目', en: 'Project' },
+        work: { zh: '工作', en: 'Work' },
         writing: { zh: '写作', en: 'Writing' },
         tool: { zh: '工具', en: 'Tool' },
         prev_post: { zh: '← 上一篇', en: '← Previous' },

@@ -2,56 +2,378 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Helper to convert slug to title
+// ---- Work data ----
+const workItems = [
+  {
+    company: 'DeepWisdom',
+    logo: '/images/logos/deepwisdom.png',
+    description: 'Vibe coding 工具的增长产品，优化转化漏斗、建设增长渠道、以及业务自动化',
+    color: '#2b44d4',
+    url: 'https://atoms.dev/',
+  },
+  {
+    company: 'TikTok Shop',
+    logo: '/images/logos/tiktok-shop.png?v=2',
+    description: '开放平台产品运营，为全球 Shopify 为主的独立站商家做集成和业务自动化',
+    color: '#111118',
+    url: 'https://seller.tiktok.com/',
+  },
+  {
+    company: 'AfterShip',
+    logo: '/images/logos/aftership.png',
+    description: '为欧美独立站电商做一键搬家、店铺装修、物流查询等 SaaS 产品，产品贡献 $3 million 收入',
+    color: '#d45a12',
+    url: 'https://www.aftership.com/',
+  },
+  {
+    company: '360',
+    logo: '/images/logos/360.png',
+    logoOriginal: true,
+    description: '负责海外移动端工具 App 的用户价值、增长和付费收入，产品贡献 8 million DAU，$10 million 收入',
+    color: '#1a1a2e',
+    url: 'https://play.google.com/store/apps/details?id=free.vpn.unblock.proxy.turbovpn&hl=en',
+  },
+];
+
+// ---- Project data ----
+const allProjects = await getCollection('projects');
+const featuredProjectSlugs = ['pod-store', 'ux-writing-assistant'];
+const featuredProjects = featuredProjectSlugs
+  .map(slug => allProjects.find(p => p.slug === slug))
+  .filter(Boolean);
+
+// ---- Writing data ----
+const allPosts = await getCollection('posts');
+
+const wechatMap: Record<string, { url: string; title: string }> = {
+  'saas-产品的价值是什么': { url: 'https://mp.weixin.qq.com/s/YsOxRJxDKwIDxEuvhh_-gA', title: 'SaaS 产品的价值是什么？' },
+  '什么是真正-ai-native-产品设计': { url: 'https://mp.weixin.qq.com/s/SImvkVqsrGdYEGHXDLSQ1g', title: '什么是 AI Native 产品设计' },
+  '深度研究几十个海外建站-saas-的精选案例让你掌握如何做-onboarding': { url: 'https://mp.weixin.qq.com/s/88OxLVpuLiAYiv3pxT1EQQ', title: '深度研究几十个海外 SaaS 总结出的 Onboarding 关键要素' },
+  'vibe-coding-用户场景和-pmf': { url: 'https://mp.weixin.qq.com/s/_YhQLRVB2oAvmikhuBrG-A', title: '谁在用 Vibe coding？' },
+  '为-ai-模型做产品': { url: 'https://mp.weixin.qq.com/s/iYzz5LXVvUpwr6zZgyHAeg', title: '为 AI 模型做产品' },
+};
+
 function slugToTitle(slug: string): string {
   return slug
-    .replace(/^\d{6}-/, '') // Remove date prefix like "170130-"
-    .replace(/-/g, ' ')     // Replace hyphens with spaces
+    .replace(/^\d{6}-/, '')
+    .replace(/-/g, ' ')
     .trim();
 }
 
-const posts = await getCollection('posts');
+const featuredPostSlugs = [
+  'saas-产品的价值是什么',
+  '什么是真正-ai-native-产品设计',
+  '深度研究几十个海外建站-saas-的精选案例让你掌握如何做-onboarding',
+  'vibe-coding-用户场景和-pmf',
+  '为-ai-模型做产品',
+];
 
-// Add derived titles and sort
-const sortedPosts = posts
-  .map(post => ({
-    ...post,
-    displayTitle: post.data.title || slugToTitle(post.slug)
-  }))
-  .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle, 'zh-CN'));
+const featuredPosts = featuredPostSlugs
+  .map(slug => {
+    const post = allPosts.find(p => p.slug === slug);
+    if (!post) return null;
+    return {
+      ...post,
+      displayTitle: wechatMap[slug]?.title || post.data.title || slugToTitle(slug),
+      href: wechatMap[slug]?.url || `/posts/${slug}`,
+      isExternal: slug in wechatMap,
+    };
+  })
+  .filter(Boolean);
 
-// Get first ~80 characters of content for excerpt (simplified approach)
 const getExcerpt = (body: string, maxLength = 100) => {
-  // Remove markdown formatting and get plain text
   const plainText = body
-    .replace(/^---[\s\S]*?---/, '') // Remove frontmatter
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to text
-    .replace(/[#*_`>\[\]]/g, '') // Remove markdown symbols
-    .replace(/\n+/g, ' ') // Replace newlines with spaces
+    .replace(/^---[\s\S]*?---/, '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[#*_`>\[\]]/g, '')
+    .replace(/\n+/g, ' ')
     .trim();
-
   if (plainText.length <= maxLength) return plainText;
   return plainText.substring(0, maxLength).trim() + '...';
 };
-
-// Format number with leading zero
-const formatNum = (n: number) => String(n).padStart(2, '0');
 ---
 
 <BaseLayout title="Home">
-  <h2 class="section-heading" data-i18n="writing">Writing</h2>
 
-  <ul class="post-grid">
-    {sortedPosts.map((post, index) => (
-      <li class="post-card">
-        <a href={`/posts/${post.slug}`} class="post-card-link">
-          <div class="post-card-content">
-            <div class="post-card-number">{formatNum(index + 1)}</div>
-            <h2 class="post-card-title">{post.displayTitle}</h2>
-            <p class="post-card-excerpt">{getExcerpt(post.body)}</p>
-          </div>
-        </a>
-      </li>
-    ))}
+  <!-- ===== Work ===== -->
+  <h2 class="section-heading fade-in-section" data-i18n="work">Work</h2>
+  <div class="work-scroll fade-in-section">
+    <ul class="work-grid">
+      {workItems.map((item) => (
+        <li class="work-card" style={`background: ${item.color};`}>
+          <a href={item.url} target="_blank" rel="noopener noreferrer" class="work-card-link">
+            <div class="work-card-top">
+              <img src={item.logo} alt={item.company} class="work-card-logo" />
+            </div>
+            <div class="work-card-bottom">
+              <h3 class="work-card-company">{item.company}</h3>
+              <p class="work-card-desc">{item.description}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- ===== Project ===== -->
+  <h2 class="section-heading fade-in-section" data-i18n="project">Project</h2>
+  <ul class="home-project-grid fade-in-section">
+    {featuredProjects.map((project) => {
+      const coverImage = project!.data.cover || `/images/projects/${project!.slug}/cover.png`;
+      return (
+        <li class="home-project-card">
+          <a href={`/projects/${project!.slug}`} class="home-project-link">
+            <div class="home-project-cover">
+              <img src={coverImage} alt={project!.data.title} class="home-project-img" loading="lazy" />
+            </div>
+            <div class="home-project-info">
+              <span class="home-project-title">{project!.data.title}</span>
+              <svg class="home-project-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 10h12M12 6l4 4-4 4" />
+              </svg>
+            </div>
+          </a>
+        </li>
+      );
+    })}
   </ul>
+
+  <!-- ===== Writing ===== -->
+  <h2 class="section-heading fade-in-section" data-i18n="writing">Writing</h2>
+  <div class="writing-scroll fade-in-section">
+    <ul class="writing-grid">
+      {featuredPosts.map((post, index) => (
+        <li class="post-card">
+          <a href={post!.href} class="post-card-link" {...(post!.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            <div class="post-card-content">
+              <div class="post-card-number">{String(index + 1).padStart(2, '0')}</div>
+              <h2 class="post-card-title">{post!.displayTitle}</h2>
+              <p class="post-card-excerpt">{getExcerpt(post!.body)}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
 </BaseLayout>
+
+<style>
+  /* ============================================================
+     Section spacing — consistent rhythm between all 3 sections
+     ============================================================ */
+
+  /* ---- Work: horizontal scroll cards ---- */
+  .work-scroll {
+    padding-bottom: 80px;
+    margin-left: calc(-1 * var(--spacing));
+    margin-right: calc(-1 * var(--spacing));
+    padding-left: var(--spacing);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .work-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 24px;
+    padding-right: var(--spacing);
+  }
+
+  .work-card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 320px;
+  }
+
+  .work-card-link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .work-card:hover {
+    transform: scale(1.015);
+    box-shadow: var(--card-shadow);
+  }
+
+  .work-card-top {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 36px;
+  }
+
+  .work-card-logo {
+    max-width: 160px;
+    max-height: 88px;
+    object-fit: contain;
+  }
+
+  .work-card-bottom {
+    padding: 20px 24px 28px;
+  }
+
+  .work-card-company {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .work-card-desc {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.92);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (min-width: 1400px) {
+    .work-scroll {
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      overflow-x: visible;
+    }
+
+    .work-grid {
+      padding-right: 0;
+    }
+
+    .work-card {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* ---- Project: 2-column image frame cards ---- */
+  .home-project-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+    padding-bottom: 80px;
+  }
+
+  .home-project-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .home-project-card:hover {
+    transform: scale(1.015);
+    border-color: var(--color-border-hover);
+    box-shadow: var(--card-shadow);
+  }
+
+  .home-project-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .home-project-cover {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .home-project-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .home-project-info {
+    padding: 16px 20px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .home-project-title {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .home-project-arrow {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .home-project-card:hover .home-project-arrow {
+    color: var(--color-text);
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 768px) {
+    .home-project-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  /* ---- Writing: horizontal scroll post cards ---- */
+  .writing-scroll {
+    padding-bottom: 80px;
+    margin-left: calc(-1 * var(--spacing));
+    margin-right: calc(-1 * var(--spacing));
+    padding-left: var(--spacing);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .writing-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .writing-grid {
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    display: flex;
+    gap: 24px;
+    padding-right: var(--spacing);
+  }
+
+  /* Override global post-card sizing for homepage scroll */
+  .writing-grid .post-card {
+    flex: 0 0 340px;
+    min-height: 360px;
+  }
+
+</style>

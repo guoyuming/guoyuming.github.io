@@ -458,7 +458,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
          ============================================================ */
       .post-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
         gap: 32px;
         list-style: none;
         margin: 0;
@@ -1002,6 +1002,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         .post-nav a {
           max-width: 100%;
         }
+
+        .footer-row {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .footer-actions {
+          position: static;
+        }
+
+        .social-links {
+          gap: 16px;
+        }
       }
 
       @media (max-width: 480px) {
@@ -1011,6 +1024,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
         .hero-title {
           font-size: 2rem;
+        }
+
+        .site-nav {
+          gap: 2px;
+        }
+
+        .site-nav a {
+          padding: 6px 10px;
+          font-size: 0.8125rem;
+        }
+
+        .site-logo-text {
+          font-size: 1.125rem;
+        }
+
+        .post-card {
+          padding: 20px 20px 24px;
+          min-height: 280px;
+        }
+
+        .post-card-number {
+          font-size: 2.5rem;
+        }
+
+        .wechat-modal-content {
+          max-width: 280px;
         }
       }
     </style>
@@ -1100,6 +1139,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         all_projects: { zh: '← 所有项目', en: '← All Projects' },
         next_project: { zh: '下一个：', en: 'Next: ' },
         visit_project: { zh: '访问项目', en: 'Visit project' },
+        all_tools: { zh: '← 所有工具', en: '← All Tools' },
+        next_tool: { zh: '下一个：', en: 'Next: ' },
+        visit_tool: { zh: '访问工具', en: 'Visit Tool' },
+        what_users_say: { zh: '用户怎么说', en: 'What Users Say' },
+        stage_research: { zh: '研究', en: 'Research' },
+        stage_design: { zh: '设计', en: 'Design' },
+        stage_build: { zh: '构建', en: 'Build' },
+        stage_ship: { zh: '发布 & 管理', en: 'Ship & Manage' },
+        stage_research_desc: { zh: '发现洞察，验证想法', en: 'Discover insights, validate ideas' },
+        stage_design_desc: { zh: '塑造体验，创建视觉', en: 'Shape experiences, create visuals' },
+        stage_build_desc: { zh: '编写代码，交付功能', en: 'Write code, ship features' },
+        stage_ship_desc: { zh: '发布、跟踪、迭代', en: 'Launch, track, iterate' },
         wechat_scan: { zh: '扫码关注微信', en: 'Scan to follow on WeChat' },
         obsession: { zh: '沉迷', en: 'Obsession' }
       };

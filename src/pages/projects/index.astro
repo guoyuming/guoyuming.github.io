@@ -54,7 +54,7 @@ const sortedProjects = projects.sort((a, b) => {
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
     gap: 32px;
   }
 
@@ -140,6 +140,12 @@ const sortedProjects = projects.sort((a, b) => {
 
     .project-info {
       padding: 14px 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-label {
+      font-size: 0.875rem;
     }
   }
 </style>

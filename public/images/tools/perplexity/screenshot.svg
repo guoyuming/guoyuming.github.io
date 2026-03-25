@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" rx="0" fill="#1B1B1B"/>
+  <rect x="200" y="60" width="800" height="56" rx="28" fill="#2A2A2A" stroke="#3A3A3A" stroke-width="1"/>
+  <text x="240" y="95" font-family="system-ui" font-size="20" fill="#888">Ask anything...</text>
+  <circle cx="960" cy="88" r="20" fill="#20B8CD"/>
+  <path d="M952 88L960 80L968 88M960 80V96" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90 960 88)"/>
+  <rect x="200" y="160" width="800" height="1" fill="#333"/>
+  <text x="200" y="210" font-family="system-ui" font-size="16" font-weight="600" fill="#20B8CD">Sources</text>
+  <rect x="200" y="230" width="180" height="80" rx="12" fill="#2A2A2A"/>
+  <rect x="400" y="230" width="180" height="80" rx="12" fill="#2A2A2A"/>
+  <rect x="600" y="230" width="180" height="80" rx="12" fill="#2A2A2A"/>
+  <rect x="800" y="230" width="180" height="80" rx="12" fill="#2A2A2A"/>
+  <text x="200" y="370" font-family="system-ui" font-size="16" font-weight="600" fill="#20B8CD">Answer</text>
+  <rect x="200" y="390" width="700" height="14" rx="4" fill="#444" opacity="0.5"/>
+  <rect x="200" y="418" width="600" height="14" rx="4" fill="#444" opacity="0.4"/>
+  <rect x="200" y="446" width="750" height="14" rx="4" fill="#444" opacity="0.35"/>
+  <rect x="200" y="474" width="500" height="14" rx="4" fill="#444" opacity="0.3"/>
+  <rect x="200" y="510" width="680" height="14" rx="4" fill="#444" opacity="0.35"/>
+  <rect x="200" y="538" width="720" height="14" rx="4" fill="#444" opacity="0.3"/>
+  <text x="600" y="610" text-anchor="middle" font-family="system-ui" font-size="14" fill="#555">perplexity.ai</text>
+</svg>

@@ -1,7 +1,399 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const tools = await getCollection('tools');
+
+const stages = [
+  { id: 'research', label: 'Research', labelZh: '研究', desc: 'Discover insights, validate ideas', descZh: '发现洞察，验证想法' },
+  { id: 'design', label: 'Design', labelZh: '设计', desc: 'Shape experiences, create visuals', descZh: '塑造体验，创建视觉' },
+  { id: 'build', label: 'Build', labelZh: '构建', desc: 'Write code, ship features', descZh: '编写代码，交付功能' },
+  { id: 'ship', label: 'Ship & Manage', labelZh: '发布 & 管理', desc: 'Launch, track, iterate', descZh: '发布、跟踪、迭代' },
+];
+
+const toolsByStage = stages.map(stage => ({
+  ...stage,
+  tools: tools
+    .filter(t => t.data.stage === stage.id)
+    .sort((a, b) => a.data.order - b.data.order),
+}));
 ---
+
 <BaseLayout title="Tool">
   <h2 class="section-heading" data-i18n="tool">Tool</h2>
-  <!-- Tool content will be added in future iterations -->
+
+  <!-- Pipeline Navigation Bar -->
+  <nav class="pipeline-bar fade-in-section">
+    {stages.map((stage, i) => (
+      <>
+        <a href={`#stage-${stage.id}`} class="pipeline-node" data-stage={stage.id}>
+          <span class="pipeline-dot" />
+          <span class="pipeline-label" data-i18n={`stage_${stage.id}`}>{stage.label}</span>
+        </a>
+        {i < stages.length - 1 && <span class="pipeline-line" />}
+      </>
+    ))}
+  </nav>
+
+  <!-- Stage Sections -->
+  {toolsByStage.map((stage, stageIndex) => (
+    <section id={`stage-${stage.id}`} class="tool-stage fade-in-section">
+      <div class="stage-header">
+        <span class="stage-number">{String(stageIndex + 1).padStart(2, '0')}</span>
+        <div class="stage-text">
+          <h3 class="stage-title" data-i18n={`stage_${stage.id}`}>{stage.label}</h3>
+          <p class="stage-desc" data-i18n={`stage_${stage.id}_desc`}>{stage.desc}</p>
+        </div>
+      </div>
+      <div class="stage-tools">
+        {stage.tools.map((tool) => (
+          <a href={`/tools/${tool.slug}`} class="tool-card" style={`--tool-color: ${tool.data.color}`}>
+            <div class="tool-card-color-bar" />
+            <div class="tool-card-head">
+              <img src={tool.data.logo} alt={tool.data.title} class="tool-logo" loading="lazy" />
+              <div class="tool-card-meta">
+                <h4 class="tool-card-name">{tool.data.title}</h4>
+                <span class="tool-card-category">{tool.data.category}</span>
+              </div>
+            </div>
+            <p class="tool-card-tagline">{tool.data.tagline}</p>
+            <span class="tool-card-arrow">&rarr;</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
 </BaseLayout>
+
+<style>
+  /* Pipeline Navigation Bar */
+  .pipeline-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0 56px;
+    gap: 0;
+  }
+
+  .pipeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 1;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+
+  .pipeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    border: 3px solid var(--color-bg);
+    box-shadow: 0 0 0 2px var(--color-accent);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .pipeline-node:hover .pipeline-dot,
+  .pipeline-node.is-active .pipeline-dot {
+    transform: scale(1.4);
+    box-shadow: 0 0 0 2px var(--color-accent), 0 0 12px rgba(228, 67, 46, 0.4);
+  }
+
+  .pipeline-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .pipeline-node:hover .pipeline-label,
+  .pipeline-node.is-active .pipeline-label {
+    color: var(--color-text);
+  }
+
+  .pipeline-line {
+    flex: 1;
+    height: 2px;
+    background: var(--color-accent);
+    opacity: 0.25;
+    min-width: 24px;
+    max-width: 120px;
+  }
+
+  /* Stage Sections */
+  .tool-stage {
+    margin-bottom: 64px;
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .stage-number {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--card-number-color);
+  }
+
+  .stage-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stage-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .stage-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Tool Cards Grid */
+  .stage-tools {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .tool-card {
+    position: relative;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 28px 28px 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    color: inherit;
+  }
+
+  .tool-card-color-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--tool-color);
+    border-radius: 3px 0 0 3px;
+    opacity: 0.6;
+    transition: opacity 0.25s ease, width 0.25s ease;
+  }
+
+  .tool-card:hover .tool-card-color-bar {
+    opacity: 1;
+    width: 4px;
+  }
+
+  .tool-card:hover {
+    transform: scale(1.015);
+    border-color: var(--color-border-hover);
+    box-shadow: var(--card-shadow);
+  }
+
+  .tool-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .tool-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .tool-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .tool-card-name {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+  }
+
+  .tool-card:hover .tool-card-name {
+    color: var(--color-accent);
+  }
+
+  .tool-card-category {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tool-card-tagline {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
+  }
+
+  .tool-card-arrow {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+    align-self: flex-end;
+  }
+
+  .tool-card:hover .tool-card-arrow {
+    transform: translateX(4px);
+    color: var(--color-accent);
+  }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .stage-tools {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pipeline-bar {
+      padding: 16px 0 40px;
+      gap: 0;
+    }
+
+    .pipeline-node {
+      padding: 8px 8px;
+    }
+
+    .pipeline-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+    }
+
+    .pipeline-line {
+      min-width: 12px;
+    }
+
+    .tool-stage {
+      margin-bottom: 48px;
+    }
+
+    .stage-number {
+      font-size: 2.5rem;
+    }
+
+    .stage-title {
+      font-size: 1.25rem;
+    }
+
+    .tool-card {
+      padding: 20px 20px 20px 24px;
+    }
+
+    .tool-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .tool-card-name {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pipeline-bar {
+      padding: 12px 0 32px;
+    }
+
+    .pipeline-node {
+      padding: 6px 4px;
+    }
+
+    .pipeline-dot {
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      box-shadow: 0 0 0 1.5px var(--color-accent);
+    }
+
+    .pipeline-label {
+      font-size: 0.6rem;
+    }
+
+    .stage-header {
+      gap: 12px;
+    }
+
+    .stage-number {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<script is:inline>
+(function(){
+  // Pipeline active state tracking with IntersectionObserver
+  var stageEls = document.querySelectorAll('.tool-stage');
+  var nodeEls = document.querySelectorAll('.pipeline-node');
+  if (!stageEls.length || !nodeEls.length) return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var stageId = entry.target.id.replace('stage-', '');
+        nodeEls.forEach(function(node) {
+          if (node.getAttribute('data-stage') === stageId) {
+            node.classList.add('is-active');
+          } else {
+            node.classList.remove('is-active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+
+  stageEls.forEach(function(s) { observer.observe(s); });
+
+  // Smooth scroll for pipeline node clicks
+  nodeEls.forEach(function(node) {
+    node.addEventListener('click', function(e) {
+      e.preventDefault();
+      var targetId = node.getAttribute('href').substring(1);
+      var targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        var navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 80;
+        var top = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>

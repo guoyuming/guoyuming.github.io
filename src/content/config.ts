@@ -23,4 +23,23 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { posts, projects };
+const tools = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    tagline: z.string(),
+    category: z.string(),
+    stage: z.string(),
+    url: z.string(),
+    logo: z.string(),
+    screenshots: z.array(z.string()),
+    color: z.string(),
+    order: z.number(),
+    verdicts: z.array(z.object({
+      quote: z.string(),
+      source: z.string(),
+    })),
+  }),
+});
+
+export const collections = { posts, projects, tools };

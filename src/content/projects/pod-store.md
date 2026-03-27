@@ -2,7 +2,7 @@
 title: "POD Store"
 description: "商家在 Printful 注册账号后，提供自己的 API key 给 Atoms，在 Atoms 构建的 App 中选品、上传设计、商品上架销售。"
 cover: "/images/projects/pod-store/preview.webp"
-url: "https://mgx-ta9a6o.pub.atoms.dev"
+url: "https://pod-store-f3c.pages.dev/"
 urlLabel: "Visit website"
 order: 1
 tags: ["e-commerce", "POD", "Web app", "Atoms"]
